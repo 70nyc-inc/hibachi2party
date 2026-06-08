@@ -1,0 +1,17 @@
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*
+
+.wrangler/
+.dev.vars
+node_modules/
+
+# Build/source — not needed for static deploy
+rebuild.mjs
+preview.mjs
+package.json
+package-lock.json
+README.txt
+.assetsignore

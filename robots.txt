@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://hibachi2partys.com/sitemap.xml
