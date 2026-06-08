@@ -198,8 +198,7 @@ initAmbientEffects();
 const heroBg = document.querySelector('.hero-bg');
 if (heroBg) {
   window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY;
-    heroBg.style.transform = `scale(1.05) translateY(${scrolled * 0.25}px)`;
+    heroBg.style.transform = `translate3d(0, ${window.scrollY * 0.2}px, 0)`;
   }, { passive: true });
 }
 
