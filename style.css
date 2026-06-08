@@ -270,6 +270,22 @@ a.btn { cursor: pointer; position: relative; z-index: 1; }
   transform: translateZ(0);
   backface-visibility: hidden;
 }
+.hero-yt-wrap {
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-yt-iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 177.78vh;
+  height: 100vh;
+  min-width: 100vw;
+  min-height: 56.25vw;
+  transform: translate(-50%, -50%);
+  border: 0;
+  pointer-events: none;
+}
 .hero::after {
   content: '';
   position: absolute; inset: 0;
@@ -1912,10 +1928,11 @@ footer {
 
 
 /* ---- Hibachi2Party overrides ---- */
-.hero video.hero-bg, .hero .hero-bg {
+.hero video.hero-bg, .hero .hero-bg, .hero .hero-yt-wrap {
   z-index: 0;
   filter: saturate(1.12) contrast(1.12) brightness(1.04);
 }
+.hero .hero-yt-iframe { filter: none; }
 .hero::after {
   content: '';
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
