@@ -28,7 +28,7 @@
   --font-brand: 'Pirata One', cursive;
   --font-head:  'Playfair Display', serif;
   --font-body:  'Inter', sans-serif;
-  --nav-height: 96px;
+  --nav-height: 120px;
 }
 
 /* ---- Reset ---- */
@@ -173,15 +173,15 @@ a.btn { cursor: pointer; position: relative; z-index: 1; }
 .nav-inner {
   display: flex; align-items: center; justify-content: space-between;
   gap: 0.75rem;
-  min-height: 68px; overflow: visible;
+  min-height: 92px; overflow: visible;
 }
 .nav-logo {
   display: flex; align-items: center; gap: 0.5rem;
   flex-shrink: 0; overflow: visible;
-  max-width: 265px;
+  max-width: 325px;
 }
 .nav-logo img {
-  width: 170px; height: auto; max-height: 68px; max-width: 100%;
+  width: 230px; height: auto; max-height: 92px; max-width: 100%;
   position: relative; z-index: 2;
   filter: drop-shadow(0 2px 8px rgba(201,162,39,0.5));
   transition: var(--transition);
@@ -1399,8 +1399,8 @@ footer {
 
 /* ---- Responsive ---- */
 @media (max-width: 1024px) {
-  .nav-logo { max-width: 245px; }
-  .nav-logo img { width: 157px; max-height: 63px; }
+  .nav-logo { max-width: 305px; }
+  .nav-logo img { width: 213px; max-height: 85px; }
   .nav-menu a { padding: 0.4rem 0.45rem; font-size: 0.8rem; }
   .nav-cta .btn-sm { padding: 0.45rem 0.6rem; font-size: 0.76rem; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
@@ -1433,8 +1433,8 @@ footer {
     position: relative; z-index: 10001;
   }
 
-  .nav-logo { max-width: 225px; }
-  .nav-logo img { width: 144px; max-height: 58px; }
+  .nav-logo { max-width: 285px; }
+  .nav-logo img { width: 194px; max-height: 78px; }
 
   .section { padding: 4rem 0; }
   .contact-map { height: 320px; }
@@ -1495,8 +1495,8 @@ footer {
   .areas-grid { grid-template-columns: 1fr; }
   .section-title { font-size: 2rem; }
   .cta-title { font-size: 1.6rem; }
-  .nav-logo { max-width: 210px; }
-  .nav-logo img { width: 131px; max-height: 52px; }
+  .nav-logo { max-width: 270px; }
+  .nav-logo img { width: 177px; max-height: 70px; }
   .footer-brand img { height: 60px; }
   .blog-card { flex-direction: column; }
   .payment-methods { max-width: 100%; }
