@@ -2215,18 +2215,7 @@ footer {
     padding: 0.85rem 1.25rem;
     font-size: 0.95rem;
   }
-  .page-home .hero-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.65rem 1rem;
-    margin-top: 1.35rem;
-    padding-top: 1.1rem;
-    border-top-color: rgba(255, 255, 255, 0.15);
-  }
-  .page-home .hero-stats > div:nth-child(1),
-  .page-home .hero-stats > div:nth-child(3) { display: none; }
-  .page-home .hero-stat-num { font-size: 1.4rem; }
-  .page-home .hero-stat-label { font-size: 0.7rem; }
+  .page-home .hero-stats { display: none; }
   .page-home .fire-particles {
     height: 120px;
     opacity: 0.45;
