@@ -59,6 +59,11 @@ const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
+      if (entry.target.classList.contains('booking-region')) {
+        entry.target.querySelectorAll('.booking-card.reveal').forEach(card => {
+          card.classList.add('visible');
+        });
+      }
       revealObserver.unobserve(entry.target);
     }
   });
@@ -66,13 +71,16 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 function initReveal() {
   document.querySelectorAll('.reveal').forEach(el => {
-    if (el.closest('.booking-page')) {
+    if (el.closest('.booking-page') && !el.classList.contains('booking-card') && !el.classList.contains('booking-region')) {
       el.classList.add('visible');
       return;
     }
     const rect = el.getBoundingClientRect();
     if (rect.top < window.innerHeight + 80 && rect.bottom > 0) {
       el.classList.add('visible');
+      if (el.classList.contains('booking-region')) {
+        el.querySelectorAll('.booking-card.reveal').forEach(card => card.classList.add('visible'));
+      }
       return;
     }
     revealObserver.observe(el);
@@ -127,6 +135,37 @@ function createSparks(container, isMobile) {
   }
 }
 
+function createStars(container, isMobile) {
+  const count = isMobile ? 50 : 85;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    const size = Math.random() < 0.18 ? Math.random() * 2 + 2.2 : Math.random() * 1.4 + 0.7;
+    const bright = Math.random() < 0.22;
+    p.className = 'particle star' + (bright ? ' star-bright' : '');
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * 100}%;
+      width: ${size}px;
+      height: ${size}px;
+      --twinkle-dur: ${(Math.random() * 3.5 + 2).toFixed(2)}s;
+      --twinkle-delay: ${(Math.random() * 6).toFixed(2)}s;
+    `;
+    container.appendChild(p);
+  }
+  const shootingCount = isMobile ? 2 : 4;
+  for (let i = 0; i < shootingCount; i++) {
+    const s = document.createElement('div');
+    s.className = 'shooting-star';
+    s.style.cssText = `
+      left: ${8 + Math.random() * 55}%;
+      top: ${4 + Math.random() * 38}%;
+      --shoot-delay: ${(Math.random() * 10 + 3).toFixed(2)}s;
+      --shoot-dur: ${(Math.random() * 1.2 + 0.7).toFixed(2)}s;
+    `;
+    container.appendChild(s);
+  }
+}
+
 function createDust(container, isMobile) {
   const count = isMobile ? 14 : 22;
   for (let i = 0; i < count; i++) {
@@ -151,6 +190,7 @@ function initAmbientEffects() {
   document.querySelectorAll('.fire-particles').forEach(c => createEmbers(c, isMobile));
   document.querySelectorAll('.ambient-sparks').forEach(c => createSparks(c, isMobile));
   document.querySelectorAll('.ambient-dust').forEach(c => createDust(c, isMobile));
+  document.querySelectorAll('.ambient-stars').forEach(c => createStars(c, isMobile));
 }
 initAmbientEffects();
 
