@@ -2184,11 +2184,18 @@ footer {
     background: transparent;
   }
   .page-home .hero {
-    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
     min-height: 100svh;
     min-height: 100dvh;
-    padding-top: calc(var(--nav-height) + 2rem);
-    padding-bottom: 8rem;
+    padding-top: var(--nav-height);
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+  }
+  .page-home .hero .container {
+    transform: translateY(-4vh);
   }
   .page-home .hero-sub-full { display: none; }
   .page-home .hero-sub-short {
