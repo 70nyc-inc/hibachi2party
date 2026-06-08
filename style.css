@@ -792,6 +792,10 @@ a.btn { cursor: pointer; position: relative; z-index: 1; }
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
+.menu-includes-label {
+  margin-top: 1.15rem;
+  margin-bottom: 0.5rem;
+}
 .menu-prose {
   color: var(--text-muted);
   font-size: 0.95rem;
