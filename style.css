@@ -2108,9 +2108,10 @@ footer {
   filter: saturate(1.1) contrast(1.06) brightness(1.06);
 }
 .page-home .hero::after {
-  background:
-    linear-gradient(90deg, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.82) 42%, rgba(255,255,255,0.62) 68%, rgba(255,255,255,0.78) 100%),
-    linear-gradient(0deg, rgba(255,255,255,0.72), transparent 38%);
+  display: none;
+}
+.page-home .hero-content {
+  text-shadow: 0 2px 18px rgba(255,255,255,0.95), 0 1px 6px rgba(255,255,255,0.8);
 }
 .page-home .hero-title { color: var(--text); }
 .page-home .hero-sub { color: var(--text-muted); }
