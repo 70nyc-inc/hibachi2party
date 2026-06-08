@@ -2101,38 +2101,51 @@ footer {
 }
 
 /* ============================================================
-   Homepage Hero — transparent nav + red accents on video
+   Homepage Hero — light overlay + readable dark text on video
    ============================================================ */
+.page-home .hero video.hero-bg,
+.page-home .hero .hero-bg {
+  filter: saturate(1.1) contrast(1.06) brightness(1.06);
+}
+.page-home .hero::after {
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.82) 42%, rgba(255,255,255,0.62) 68%, rgba(255,255,255,0.78) 100%),
+    linear-gradient(0deg, rgba(255,255,255,0.72), transparent 38%);
+}
+.page-home .hero-title { color: var(--text); }
+.page-home .hero-sub { color: var(--text-muted); }
+.page-home .hero-stat-label { color: var(--text-muted); }
+.page-home .fire-particles { opacity: 0.18; }
 .page-home .navbar:not(.scrolled) {
   background: transparent;
   border-bottom: none;
   box-shadow: none;
 }
 .page-home .navbar:not(.scrolled) .nav-menu a {
-  color: rgba(255,255,255,0.72);
+  color: var(--text-muted);
 }
 .page-home .navbar:not(.scrolled) .nav-menu a:hover {
-  color: var(--white);
-  background: rgba(255,255,255,0.1);
+  color: var(--text);
+  background: rgba(0,0,0,0.05);
 }
 .page-home .navbar:not(.scrolled) .nav-menu a.active {
-  color: #FCA5A5;
+  color: var(--primary);
 }
 .page-home .navbar:not(.scrolled) .hamburger span {
-  background: var(--white);
+  background: var(--text);
 }
 .page-home .navbar:not(.scrolled) .btn-outline {
-  border-color: rgba(255,255,255,0.35);
-  color: var(--white);
+  border-color: var(--border);
+  color: var(--text);
 }
 .page-home .navbar:not(.scrolled) .btn-outline:hover {
-  border-color: #FCA5A5;
-  color: #FCA5A5;
+  border-color: var(--primary);
+  color: var(--primary);
 }
 .page-home .navbar:not(.scrolled) .social-link-nav {
-  background: rgba(255,255,255,0.12);
-  border-color: rgba(255,255,255,0.28);
-  color: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.85);
+  border-color: var(--border);
+  color: var(--text-muted);
 }
 .page-home .navbar:not(.scrolled) .social-link-nav:hover {
   background: var(--primary);
@@ -2140,28 +2153,28 @@ footer {
   color: var(--white);
 }
 .page-home .navbar:not(.scrolled) .nav-logo {
-  padding: 0;
-  background: transparent;
-  box-shadow: none;
+  padding: 0.35rem 0.8rem;
+  background: linear-gradient(135deg, #18181b 0%, #27272a 100%);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 .page-home .navbar:not(.scrolled) .nav-logo:hover {
-  box-shadow: none;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
 }
 .page-home .hero .btn-outline {
-  border-color: rgba(255,255,255,0.35);
-  color: var(--white);
+  border-color: var(--border);
+  color: var(--text);
 }
 .page-home .hero .btn-outline:hover {
-  border-color: #FCA5A5;
-  color: #FCA5A5;
+  border-color: var(--primary);
+  color: var(--primary);
 }
 .page-home .hero-badge {
-  background: rgba(220,38,38,0.18);
-  border-color: rgba(220,38,38,0.45);
-  color: #FECACA;
+  background: rgba(220,38,38,0.08);
+  border-color: rgba(220,38,38,0.28);
+  color: var(--primary);
 }
 .page-home .hero-title .highlight {
-  background: linear-gradient(135deg, #FECACA, var(--primary));
+  background: linear-gradient(135deg, var(--primary), #991B1B);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -2170,7 +2183,7 @@ footer {
   min-height: 100vh;
   min-height: 100svh;
 }
-.page-home .hero-stat-num { color: #FCA5A5; }
+.page-home .hero-stat-num { color: var(--primary); }
 .page-home .hero-card { border-color: rgba(220,38,38,0.35); }
 .page-home .price-mini b { color: #FCA5A5; }
 
@@ -2180,8 +2193,9 @@ footer {
   .page-home .nav-logo { max-width: 200px; padding: 0.25rem 0.55rem; }
   .page-home .nav-logo img { width: 148px; max-height: 56px; }
   .page-home .navbar:not(.scrolled) .nav-logo {
-    padding: 0;
-    background: transparent;
+    padding: 0.35rem 0.55rem;
+    background: linear-gradient(135deg, #18181b 0%, #27272a 100%);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   }
   .page-home .hero {
     display: flex;
@@ -2230,12 +2244,6 @@ footer {
   .page-home .hero-stats { display: none; }
   .page-home .fire-particles {
     height: 120px;
-    opacity: 0.45;
-  }
-  .page-home .hero::after {
-    background:
-      linear-gradient(90deg, rgba(8,12,24,0.92) 0%, rgba(8,12,24,0.72) 100%),
-      linear-gradient(0deg, rgba(8,12,24,0.75), transparent 40%);
   }
 }
 
