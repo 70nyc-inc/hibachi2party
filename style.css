@@ -28,11 +28,12 @@
   --font-brand: 'Pirata One', cursive;
   --font-head:  'Playfair Display', serif;
   --font-body:  'Inter', sans-serif;
+  --nav-height: 80px;
 }
 
 /* ---- Reset ---- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--nav-height); }
 html { overflow-x: hidden; }
 body {
   font-family: var(--font-body);
@@ -230,6 +231,7 @@ a.btn { cursor: pointer; position: relative; z-index: 1; }
 .hero {
   position: relative; min-height: 100vh;
   display: flex; align-items: center;
+  padding-top: var(--nav-height);
   overflow: hidden;
 }
 .hero-bg {
@@ -1340,10 +1342,10 @@ footer {
 
   .section { padding: 4rem 0; }
   .contact-map { height: 320px; }
+  :root { --nav-height: 110px; }
   .hero-title { font-size: 1.75rem; }
   .hero {
     align-items: flex-start;
-    padding-top: 110px;
     padding-bottom: 3rem;
   }
   .price-cards-grid { grid-template-columns: 1fr; max-width: 420px; margin-left: auto; margin-right: auto; }
