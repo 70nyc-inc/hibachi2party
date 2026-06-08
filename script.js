@@ -62,9 +62,24 @@ const revealObserver = new IntersectionObserver((entries) => {
       revealObserver.unobserve(entry.target);
     }
   });
-}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0.08, rootMargin: '60px 0px -20px 0px' });
 
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+function initReveal() {
+  document.querySelectorAll('.reveal').forEach(el => {
+    if (el.closest('.booking-page')) {
+      el.classList.add('visible');
+      return;
+    }
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight + 80 && rect.bottom > 0) {
+      el.classList.add('visible');
+      return;
+    }
+    revealObserver.observe(el);
+  });
+}
+
+initReveal();
 
 /* ---- Fire particles (sparks rising from hero bottom) ---- */
 function createParticles() {
