@@ -2166,6 +2166,10 @@ footer {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+.page-home .hero {
+  min-height: 100vh;
+  min-height: 100svh;
+}
 .page-home .hero-stat-num { color: #FCA5A5; }
 .page-home .hero-card { border-color: rgba(220,38,38,0.35); }
 .page-home .price-mini b { color: #FCA5A5; }
@@ -2181,9 +2185,10 @@ footer {
   }
   .page-home .hero {
     align-items: flex-start;
-    min-height: auto;
-    padding-top: calc(var(--nav-height) + 1rem);
-    padding-bottom: 6rem;
+    min-height: 100svh;
+    min-height: 100dvh;
+    padding-top: calc(var(--nav-height) + 2rem);
+    padding-bottom: 8rem;
   }
   .page-home .hero-sub-full { display: none; }
   .page-home .hero-sub-short {
