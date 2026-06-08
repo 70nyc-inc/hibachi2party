@@ -10,7 +10,7 @@
   --primary:    #DC2626;
   --primary-dk: #B91C1C;
   --dark:       #FFFFFF;
-  --dark-2:     #F7F7F8;
+  --dark-2:     #F0F1F3;
   --dark-3:     #F3F4F6;
   --gold:       #F59E0B;
   --gold-lt:    #FCD34D;
@@ -1941,6 +1941,20 @@ footer {
 .hero-card .btn-primary { width: 100%; margin-top: 1rem; }
 .page-hero-desc { color: var(--text-muted); max-width: 620px; font-size: 1.1rem; line-height: 1.7; margin-top: 1rem; }
 .section-alt { background: var(--dark-2); }
+
+/* Homepage section rhythm — alternate white / gray bands */
+.page-home .section:not(.hero),
+.page-home .section-alt,
+.page-home .section-sm.home-seo-blurb {
+  border-top: 1px solid var(--border);
+}
+.page-home .section-alt,
+.page-home .service-areas {
+  background: linear-gradient(180deg, #F0F1F3 0%, #ECEEF1 100%);
+}
+.page-home .section:not(.hero):not(.section-alt):not(.service-areas) {
+  background: var(--white);
+}
 .price-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
 .area-desc { font-size: 0.82rem; color: var(--text-muted); margin-top: 0.25rem; }
 .area-links-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-top:2rem; }
