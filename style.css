@@ -522,8 +522,100 @@ a.btn { cursor: pointer; position: relative; z-index: 1; }
 .gal-item-video video { aspect-ratio: 16/9; object-fit: cover; }
 .gallery-page-section .gallery-masonry { margin-top: 1.5rem; }
 
-/* ---- FAQ ---- */
-.faq-list { max-width: 800px; margin: 0 auto; }
+/* ---- Page ambient FX ---- */
+.page-fx-wrap {
+  position: relative;
+  overflow: hidden;
+}
+.page-fx-wrap > .ambient-fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.page-fx-wrap > .section {
+  position: relative;
+  z-index: 1;
+}
+
+/* Menu — teppanyaki grill sparks */
+.menu-fx-wrap {
+  background: linear-gradient(180deg, var(--dark-2) 0%, var(--dark) 55%, #0f0c18 100%);
+}
+.menu-fx-wrap .section-alt { background: transparent; }
+.ambient-sparks::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 40%;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 100%, rgba(255, 210, 80, 0.1) 0%, transparent 72%),
+    linear-gradient(to top, rgba(201, 162, 39, 0.06) 0%, transparent 100%);
+}
+.particle.spark {
+  position: absolute;
+  width: var(--len, 14px);
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 248, 210, 0.95) 35%, rgba(245, 158, 11, 1) 55%, transparent 100%);
+  box-shadow: 0 0 8px 1px rgba(255, 200, 80, 0.55);
+  transform-origin: left center;
+  animation: spark-fly linear infinite;
+  opacity: 0;
+}
+@keyframes spark-fly {
+  0%   { transform: rotate(var(--angle)) translate(0, 0) scaleX(0.2); opacity: 0; }
+  15%  { opacity: 1; transform: rotate(var(--angle)) translate(0, 0) scaleX(1); }
+  100% { transform: rotate(var(--angle)) translate(var(--dx), var(--dy)) scaleX(0.1); opacity: 0; }
+}
+
+/* Contact — soft golden dust */
+.contact-fx-wrap {
+  background: linear-gradient(180deg, var(--dark) 0%, #0a1020 55%, #0d1528 100%);
+}
+.contact-fx-section { min-height: 420px; }
+.ambient-dust::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 55%;
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 100%, rgba(201, 162, 39, 0.1) 0%, transparent 72%),
+    radial-gradient(ellipse 40% 40% at 20% 80%, rgba(100, 140, 255, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 80% 75%, rgba(100, 140, 255, 0.05) 0%, transparent 70%);
+}
+.particle.dust {
+  position: absolute;
+  bottom: 0;
+  z-index: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(252, 211, 77, 0.9) 0%, rgba(201, 162, 39, 0.35) 50%, transparent 72%);
+  filter: blur(1px);
+  box-shadow: 0 0 14px 3px rgba(201, 162, 39, 0.22);
+  animation: dust-drift ease-in-out infinite;
+  opacity: 0;
+}
+@keyframes dust-drift {
+  0%   { transform: translate(0, 20px) scale(0.5); opacity: 0; }
+  18%  { opacity: 0.8; }
+  100% { transform: translate(var(--drift), -260px) scale(1.15); opacity: 0; }
+}
+
+/* ---- FAQ & Booking — ember fire ---- */
+.faq-fire-section,
+.booking-fire-section {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--dark) 0%, var(--dark-2) 50%, #120a06 100%);
+}
+.faq-fire-section .container,
+.booking-fire-section .container { position: relative; z-index: 2; }
+.faq-fire-section .fire-particles,
+.booking-fire-section .fire-particles { height: 300px; z-index: 1; }
+.booking-fire-section .booking-grid,
+.booking-fire-section .locations-note { position: relative; z-index: 2; }
+.faq-list { max-width: 800px; margin: 0 auto; position: relative; z-index: 2; }
 .faq-item {
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1355,6 +1447,8 @@ footer {
   .price-cards-grid { grid-template-columns: 1fr; max-width: 420px; margin-left: auto; margin-right: auto; }
   .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
   .fire-particles { height: 260px; }
+  .faq-fire-section .fire-particles,
+  .booking-fire-section .fire-particles { height: 220px; }
   .fire-particles::before {
     background:
       radial-gradient(ellipse 95% 90% at 50% 100%, rgba(255, 120, 20, 0.32) 0%, transparent 72%),

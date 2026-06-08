@@ -81,11 +81,10 @@ function initReveal() {
 
 initReveal();
 
-/* ---- Fire particles (sparks rising from hero bottom) ---- */
-function createParticles() {
-  const container = document.querySelector('.fire-particles');
-  if (!container) return;
-  const count = window.matchMedia('(max-width: 768px)').matches ? 28 : 42;
+/* ---- Ambient effects (hero embers, page-specific FX) ---- */
+function createEmbers(container, isMobile) {
+  const isPageEmber = container.closest('.faq-fire-section, .booking-fire-section');
+  const count = isPageEmber ? (isMobile ? 22 : 32) : (isMobile ? 28 : 42);
   for (let i = 0; i < count; i++) {
     const p = document.createElement('div');
     const size = Math.random() * 7 + 3;
@@ -104,7 +103,56 @@ function createParticles() {
     container.appendChild(p);
   }
 }
-createParticles();
+
+function createSparks(container, isMobile) {
+  const count = isMobile ? 18 : 30;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    const angle = -50 - Math.random() * 80;
+    const len = Math.random() * 20 + 10;
+    const dx = (Math.random() - 0.25) * 140;
+    const dy = -(Math.random() * 180 + 60);
+    p.className = 'particle spark';
+    p.style.cssText = `
+      left: ${4 + Math.random() * 92}%;
+      bottom: ${4 + Math.random() * 28}%;
+      --angle: ${angle}deg;
+      --len: ${len}px;
+      --dx: ${dx}px;
+      --dy: ${dy}px;
+      animation-duration: ${Math.random() * 0.7 + 0.35}s;
+      animation-delay: ${Math.random() * 2.5}s;
+    `;
+    container.appendChild(p);
+  }
+}
+
+function createDust(container, isMobile) {
+  const count = isMobile ? 14 : 22;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    const size = Math.random() * 6 + 3;
+    const drift = (Math.random() - 0.5) * 120;
+    p.className = 'particle dust';
+    p.style.cssText = `
+      left: ${6 + Math.random() * 88}%;
+      width: ${size}px;
+      height: ${size}px;
+      --drift: ${drift}px;
+      animation-duration: ${Math.random() * 5 + 4}s;
+      animation-delay: ${Math.random() * 4}s;
+    `;
+    container.appendChild(p);
+  }
+}
+
+function initAmbientEffects() {
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  document.querySelectorAll('.fire-particles').forEach(c => createEmbers(c, isMobile));
+  document.querySelectorAll('.ambient-sparks').forEach(c => createSparks(c, isMobile));
+  document.querySelectorAll('.ambient-dust').forEach(c => createDust(c, isMobile));
+}
+initAmbientEffects();
 
 /* ---- Hero parallax ---- */
 const heroBg = document.querySelector('.hero-bg');
