@@ -1663,7 +1663,7 @@ textarea.form-control { resize: vertical; min-height: 130px; }
   border-top: 0;
 }
 .estimate-protein-note {
-  margin: 0 0 0.65rem;
+  margin: 0.5rem 0 0.85rem;
   padding: 0.75rem 1rem;
   border-radius: var(--radius);
   background: rgba(220, 38, 38, 0.06);
@@ -1673,6 +1673,15 @@ textarea.form-control { resize: vertical; min-height: 130px; }
   line-height: 1.5;
   color: var(--text);
   text-align: center;
+}
+.estimate-protein-note p {
+  margin: 0;
+}
+.estimate-protein-note p + p {
+  margin-top: 0.35rem;
+  font-weight: 500;
+  font-size: 0.88rem;
+  color: var(--text-muted);
 }
 .estimate-panel {
   margin-bottom: 0.75rem;
