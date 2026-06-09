@@ -38,6 +38,7 @@ if (hamburger && navMenu) {
     hamburger.classList.add('open');
     navMenu.classList.add('open');
     hamburger.setAttribute('aria-expanded', 'true');
+    hamburger.setAttribute('aria-label', 'Close menu');
     document.body.appendChild(navMenu);
     lockScroll();
   }
@@ -45,6 +46,7 @@ if (hamburger && navMenu) {
     hamburger.classList.remove('open');
     navMenu.classList.remove('open');
     hamburger.setAttribute('aria-expanded', 'false');
+    hamburger.setAttribute('aria-label', 'Open menu');
     if (navMenuSibling) {
       navMenuHome.insertBefore(navMenu, navMenuSibling);
     } else {

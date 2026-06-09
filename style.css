@@ -2654,8 +2654,24 @@ footer {
   .hamburger { display: flex; }
 
   body.nav-open .navbar {
+    z-index: 10001;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+  }
+  body.nav-open .hamburger {
+    position: fixed;
+    top: calc(0.65rem + env(safe-area-inset-top, 0px));
+    right: calc(0.75rem + env(safe-area-inset-right, 0px));
+    z-index: 10002;
+    display: flex;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.96);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  body.nav-open .hamburger span {
+    background: var(--text);
   }
   .nav-menu.open {
     display: flex; flex-direction: column;
@@ -2706,10 +2722,6 @@ footer {
     color: var(--primary);
     background: #F3F4F6;
   }
-  body.page-home.nav-open .hamburger span {
-    background: var(--text);
-  }
-
   .nav-logo { max-width: 285px; }
   .nav-logo img { width: 194px; max-height: 78px; }
 
