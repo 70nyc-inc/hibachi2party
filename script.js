@@ -14,31 +14,50 @@ if (navbar) {
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 if (hamburger && navMenu) {
+  const navMenuHome = navMenu.parentNode;
+  const navMenuSibling = navMenu.nextSibling;
+  let scrollLockY = 0;
+
   function lockScroll() {
+    scrollLockY = window.scrollY;
+    document.body.classList.add('nav-open');
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
     document.body.style.width = '100%';
-    document.body.style.top = '-' + window.scrollY + 'px';
+    document.body.style.top = '-' + scrollLockY + 'px';
   }
   function unlockScroll() {
-    const scrollY = document.body.style.top;
+    document.body.classList.remove('nav-open');
     document.body.style.overflow = '';
     document.body.style.position = '';
     document.body.style.width = '';
     document.body.style.top = '';
-    window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    window.scrollTo(0, scrollLockY);
+  }
+  function openNavMenu() {
+    hamburger.classList.add('open');
+    navMenu.classList.add('open');
+    hamburger.setAttribute('aria-expanded', 'true');
+    document.body.appendChild(navMenu);
+    lockScroll();
+  }
+  function closeNavMenu() {
+    hamburger.classList.remove('open');
+    navMenu.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    if (navMenuSibling) {
+      navMenuHome.insertBefore(navMenu, navMenuSibling);
+    } else {
+      navMenuHome.appendChild(navMenu);
+    }
+    unlockScroll();
   }
   hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('open');
-    navMenu.classList.toggle('open');
-    if (navMenu.classList.contains('open')) { lockScroll(); } else { unlockScroll(); }
+    if (navMenu.classList.contains('open')) closeNavMenu();
+    else openNavMenu();
   });
   navMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      hamburger.classList.remove('open');
-      navMenu.classList.remove('open');
-      unlockScroll();
-    });
+    link.addEventListener('click', closeNavMenu);
   });
 }
 
