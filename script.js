@@ -668,6 +668,7 @@ function initEstimationCalculator() {
       ...data.calcLines.map(l => `- ${l}`),
       `Food total: ${money(data.foodSubtotal)}`,
       `Total cash: ${money(data.foodSubtotal)} + ${money(data.travel)} = ${money(data.preTipTotal)}`,
+      ...(data.belowMinimum ? [`$${RATES.minFood} event minimum applies.`] : []),
       '',
       'Tips Suggestion',
       ...data.tipLines.map(l => `- ${l}`),
@@ -706,8 +707,8 @@ function initEstimationCalculator() {
     const rawFood = adultTotal + kidTotal + premiumTotal + extrasTotal;
     const hasGuests = adults + kids > 0;
 
-    const foodSubtotal = hasGuests ? Math.max(rawFood, RATES.minFood) : rawFood;
-    const minimumBump = hasGuests && rawFood < RATES.minFood ? RATES.minFood - rawFood : 0;
+    const foodSubtotal = rawFood;
+    const belowMinimum = hasGuests && rawFood < RATES.minFood;
     const preTipTotal = foodSubtotal + travel;
 
     const premiumItems = [];
@@ -727,7 +728,6 @@ function initEstimationCalculator() {
       `Premium upgrades: ${money(premiumTotal)}`,
     ];
     calcLines.push(`Appetizers/Extras: ${money(extrasTotal)}`);
-    if (minimumBump) calcLines.push(`Event minimum adjustment: ${money(minimumBump)}`);
 
     const tipLines = [20, 25, 30].map(
       pct => `${pct}% tips: ${money(preTipTotal * (pct / 100))}`
@@ -743,7 +743,12 @@ function initEstimationCalculator() {
       foodSubtotal,
       preTipTotal,
       tipLines,
+      belowMinimum,
     };
+
+    const minimumNote = belowMinimum
+      ? `<p class="estimate-receipt-minimum">$${RATES.minFood} event minimum applies.</p>`
+      : '';
 
     receiptEl.innerHTML = `
       <div class="estimate-receipt-brand">Hibachi2Party</div>
@@ -764,6 +769,7 @@ function initEstimationCalculator() {
       </ul>
       <div class="estimate-receipt-total">Food total: ${money(foodSubtotal)}</div>
       <div class="estimate-receipt-total estimate-receipt-total-strong">Total cash: ${money(foodSubtotal)} + ${money(travel)} = ${money(preTipTotal)}</div>
+      ${minimumNote}
       <hr class="estimate-receipt-divider">
       <div class="estimate-receipt-label">Tips Suggestion</div>
       <ul class="estimate-receipt-list">

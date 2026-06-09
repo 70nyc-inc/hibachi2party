@@ -1552,6 +1552,14 @@ textarea.form-control { resize: vertical; min-height: 130px; }
   padding-top: 0.55rem;
   border-top: 1px dashed #bbb;
 }
+.estimate-receipt-minimum {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: #8a5a00;
+  font-family: var(--font-body);
+  font-weight: 600;
+}
 .estimate-receipt-empty {
   text-align: center;
   color: #666;
