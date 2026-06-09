@@ -2656,13 +2656,20 @@ footer {
   .navbar .nav-cta .btn:not(.btn-primary) { display: none; }
   .nav-social { display: none; }
   .nav-inner {
+    position: relative;
     padding-right: 2.75rem;
+  }
+  .nav-cta {
+    display: flex;
+    align-items: center;
+    align-self: center;
   }
   .hamburger {
     display: flex;
-    position: fixed;
-    top: calc(0.75rem + env(safe-area-inset-top, 0px));
-    right: calc(1rem + env(safe-area-inset-right, 0px));
+    position: absolute;
+    top: 50%;
+    right: calc(env(safe-area-inset-right, 0px));
+    transform: translateY(-50%);
     z-index: 10003;
     width: 44px;
     height: 44px;
