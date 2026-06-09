@@ -363,12 +363,457 @@ const counterObserver = new IntersectionObserver(entries => {
 document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
 
 /* ---- Smooth anchor offset for fixed nav ---- */
+function scrollToAnchorTarget(selector, behavior = 'smooth') {
+  const target = document.querySelector(selector);
+  if (!target) return;
+  const offset = navbar ? navbar.offsetHeight + 20 : 80;
+  window.scrollTo({ top: target.offsetTop - offset, behavior });
+}
+
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', e => {
     const target = document.querySelector(anchor.getAttribute('href'));
     if (!target) return;
     e.preventDefault();
-    const offset = navbar ? navbar.offsetHeight + 20 : 80;
-    window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+    scrollToAnchorTarget(anchor.getAttribute('href'));
   });
 });
+
+const BOOKING_REGION_IDS = ['northeast', 'south', 'midwest', 'west'];
+
+function scrollToBookingRegionHead(regionId, behavior = 'smooth') {
+  const bookingPage = document.querySelector('.booking-page');
+  if (!bookingPage) return;
+  const head =
+    regionId === 'all'
+      ? bookingPage.querySelector('#booking-cities-list .booking-region-head')
+      : bookingPage.querySelector(`#region-${regionId} .booking-region-head`);
+  if (!head) return;
+  const offset = navbar ? navbar.offsetHeight + 20 : 80;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const top = head.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior });
+    });
+  });
+}
+
+function selectBookingRegion(regionId, { updateHash = true, scroll = false } = {}) {
+  const bookingPage = document.querySelector('.booking-page');
+  if (!bookingPage || !BOOKING_REGION_IDS.includes(regionId)) return;
+
+  bookingPage.querySelector('.booking-region-jump-all')?.classList.remove('is-active');
+  bookingPage.querySelector('.booking-show-all-btn')?.classList.remove('is-active');
+
+  bookingPage.querySelectorAll('.booking-region-jump-item[data-region]').forEach(item => {
+    if (item.dataset.region === 'all') return;
+    const active = item.dataset.region === regionId;
+    item.classList.toggle('is-active', active);
+  });
+
+  bookingPage.querySelectorAll('.booking-region-jump-btn[data-region]').forEach(btn => {
+    const active = btn.dataset.region === regionId;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+
+  bookingPage.querySelectorAll('.booking-region[data-region]').forEach(panel => {
+    const active = panel.dataset.region === regionId;
+    panel.classList.toggle('booking-region-hidden', !active);
+    panel.classList.toggle('booking-region-focus', active);
+    panel.hidden = !active;
+  });
+
+  const label = bookingPage.querySelector(`.booking-region-jump-btn[data-region="${regionId}"]`)?.textContent?.trim();
+  const intro = bookingPage.querySelector('.booking-intro');
+  if (intro && label) {
+    intro.textContent = `Choose your city in ${label} to open the private chef calendar. Every location includes live hibachi show cooking at your home or venue.`;
+  }
+
+  if (updateHash) {
+    const nextHash = `#region-${regionId}`;
+    if (location.hash !== nextHash) {
+      history.replaceState(null, '', `${location.pathname}${location.search}${nextHash}`);
+    }
+  }
+
+  if (scroll) {
+    scrollToBookingRegionHead(regionId, 'smooth');
+  }
+}
+
+function showAllBookingRegions({ updateHash = true, scroll = false } = {}) {
+  const bookingPage = document.querySelector('.booking-page');
+  if (!bookingPage) return;
+
+  bookingPage.querySelectorAll('.booking-region-jump-item[data-region]').forEach(item => {
+    if (item.dataset.region !== 'all') item.classList.remove('is-active');
+  });
+
+  bookingPage.querySelectorAll('.booking-region-jump-btn[data-region]').forEach(btn => {
+    btn.classList.remove('is-active');
+    btn.setAttribute('aria-pressed', 'false');
+  });
+
+  bookingPage.querySelector('.booking-region-jump-all')?.classList.add('is-active');
+  bookingPage.querySelector('.booking-show-all-btn')?.classList.add('is-active');
+
+  bookingPage.querySelectorAll('.booking-region[data-region]').forEach(panel => {
+    panel.classList.remove('booking-region-hidden', 'booking-region-focus');
+    panel.hidden = false;
+  });
+
+  const intro = bookingPage.querySelector('.booking-intro');
+  if (intro) {
+    intro.textContent =
+      'Browse all booking locations across Northeast, South, Midwest and West — pick a city to open the private chef calendar.';
+  }
+
+  if (updateHash) {
+    const nextHash = '#all';
+    if (location.hash !== nextHash) {
+      history.replaceState(null, '', `${location.pathname}${location.search}${nextHash}`);
+    }
+  }
+
+  if (scroll) {
+    scrollToBookingRegionHead('all', 'smooth');
+  }
+}
+
+function initBookingRegionNav() {
+  const bookingPage = document.querySelector('.booking-page');
+  if (!bookingPage) return;
+
+  const wireJumpItem = (item, go) => {
+    item.querySelector('.booking-region-jump-map')?.addEventListener('click', go);
+    item.querySelector('.booking-region-jump-map')?.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        go();
+      }
+    });
+    item.querySelector('.booking-region-jump-btn')?.addEventListener('click', e => {
+      e.preventDefault();
+      go();
+    });
+  };
+
+  const allItem = bookingPage.querySelector('.booking-region-jump-all');
+  if (allItem) wireJumpItem(allItem, () => showAllBookingRegions({ scroll: true }));
+
+  bookingPage.querySelectorAll('.booking-region-jump-item[data-region]').forEach(item => {
+    if (item.dataset.region === 'all') return;
+    wireJumpItem(item, () => selectBookingRegion(item.dataset.region, { scroll: true }));
+  });
+
+  if (location.hash === '#all') {
+    showAllBookingRegions({ updateHash: false, scroll: false });
+    return;
+  }
+
+  const hashMatch = location.hash.match(/^#region-(northeast|south|midwest|west)$/);
+  if (hashMatch) {
+    selectBookingRegion(hashMatch[1], { updateHash: false, scroll: false });
+    return;
+  }
+
+  showAllBookingRegions({ updateHash: false, scroll: false });
+}
+
+if (location.hash) {
+  window.addEventListener('load', () => {
+    window.setTimeout(() => {
+      const onBookingPage = document.querySelector('.booking-page');
+      const regionMatch = location.hash.match(/^#region-(northeast|south|midwest|west)$/);
+      if (onBookingPage && regionMatch) {
+        initBookingRegionNav();
+        scrollToBookingRegionHead(regionMatch[1], 'auto');
+      } else if (onBookingPage && location.hash === '#all') {
+        initBookingRegionNav();
+        scrollToBookingRegionHead('all', 'auto');
+      } else {
+        scrollToAnchorTarget(location.hash, 'auto');
+      }
+    }, 80);
+  });
+} else {
+  window.addEventListener('load', () => {
+    window.setTimeout(initBookingRegionNav, 0);
+  });
+}
+
+/* ---- Locations map: click/hover state to jump & highlight region ---- */
+function regionPanel(regionId) {
+  return document.getElementById(`region-${regionId}`);
+}
+
+function setActiveMapRegion(regionId) {
+  document.querySelectorAll('.locations-us-map path.served[data-region]').forEach(path => {
+    path.classList.toggle('map-region-active', path.dataset.region === regionId);
+  });
+  document.querySelectorAll('.locations-region[data-region]').forEach(panel => {
+    panel.classList.toggle('locations-region-hover', panel.dataset.region === regionId);
+  });
+}
+
+function clearActiveMapRegion() {
+  setActiveMapRegion('');
+}
+
+function scrollToRegion(regionId) {
+  const target = regionPanel(regionId);
+  if (!target) return;
+  const offset = navbar ? navbar.offsetHeight + 20 : 80;
+  window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+  setActiveMapRegion(regionId);
+  target.classList.add('locations-region-focus');
+  window.setTimeout(() => {
+    target.classList.remove('locations-region-focus');
+    clearActiveMapRegion();
+  }, 1600);
+}
+
+document.querySelectorAll('.locations-us-map path.served[data-region]').forEach(path => {
+  const regionId = path.dataset.region;
+  const go = () => scrollToRegion(regionId);
+  path.addEventListener('click', go);
+  path.addEventListener('mouseenter', () => setActiveMapRegion(regionId));
+  path.addEventListener('mouseleave', clearActiveMapRegion);
+  path.addEventListener('focus', () => setActiveMapRegion(regionId));
+  path.addEventListener('blur', clearActiveMapRegion);
+  path.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      go();
+    }
+  });
+});
+
+document.querySelectorAll('.locations-region[data-region]').forEach(panel => {
+  const regionId = panel.dataset.region;
+  panel.addEventListener('mouseenter', () => setActiveMapRegion(regionId));
+  panel.addEventListener('mouseleave', clearActiveMapRegion);
+});
+
+document.querySelectorAll('.locations-jump a[href^="#region-"]').forEach(link => {
+  const regionId = link.getAttribute('href').replace('#region-', '');
+  link.addEventListener('mouseenter', () => setActiveMapRegion(regionId));
+  link.addEventListener('mouseleave', clearActiveMapRegion);
+  link.addEventListener('focus', () => setActiveMapRegion(regionId));
+  link.addEventListener('blur', clearActiveMapRegion);
+});
+
+/* ---- Cost estimation calculator ---- */
+function initEstimationCalculator() {
+  const page = document.querySelector('.estimation-page');
+  if (!page) return;
+
+  const fields = {
+    adults: document.getElementById('est-adults'),
+    kids: document.getElementById('est-kids'),
+    scallop: document.getElementById('est-scallop'),
+    filet: document.getElementById('est-filet'),
+    lobster: document.getElementById('est-lobster'),
+    extraProtein: document.getElementById('est-extra-protein'),
+    noodles: document.getElementById('est-noodles'),
+    edamame: document.getElementById('est-edamame'),
+    gyoza: document.getElementById('est-gyoza'),
+    travel: document.getElementById('est-travel'),
+  };
+  const linesEl = document.getElementById('est-lines');
+  const tipLinesEl = document.getElementById('est-tip-lines');
+  const heroTotalEl = document.getElementById('est-hero-total');
+  const heroSubEl = document.getElementById('est-hero-sub');
+  const resetBtn = document.getElementById('est-reset');
+  const copyBtn = document.getElementById('est-copy');
+  if (!linesEl || !tipLinesEl || !heroTotalEl || !heroSubEl) return;
+
+  const RATES = {
+    adult: 50,
+    kid: 25,
+    minFood: 500,
+    scallop: 5,
+    filet: 5,
+    lobster: 10,
+    extraProtein: 10,
+    noodles: 5,
+    edamame: 5,
+    gyoza: 10,
+  };
+
+  const money = n => `$${n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+  const val = el => Math.max(0, Math.floor(Number(el?.value) || 0));
+
+  function addLine(lines, label, amount, { muted = false, total = false } = {}) {
+    if (!amount && !total) return;
+    lines.push({ label, amount, muted, total });
+  }
+
+  function renderLines(container, items) {
+    container.innerHTML = items
+      .map(
+        ({ label, amount, muted, total }) =>
+          `<div class="${muted ? 'estimate-line-muted' : ''}${total ? ' estimate-line-total' : ''}"><dt>${label}</dt><dd>${money(amount)}</dd></div>`
+      )
+      .join('');
+  }
+
+  function calculate() {
+    const adults = val(fields.adults);
+    const kids = val(fields.kids);
+    const scallop = val(fields.scallop);
+    const filet = val(fields.filet);
+    const lobster = val(fields.lobster);
+    const extraProtein = val(fields.extraProtein);
+    const noodles = val(fields.noodles);
+    const edamame = val(fields.edamame);
+    const gyoza = val(fields.gyoza);
+    const travel = Math.max(0, Number(fields.travel?.value) || 0);
+
+    const adultTotal = adults * RATES.adult;
+    const kidTotal = kids * RATES.kid;
+    const scallopTotal = scallop * RATES.scallop;
+    const filetTotal = filet * RATES.filet;
+    const lobsterTotal = lobster * RATES.lobster;
+    const extraProteinTotal = extraProtein * RATES.extraProtein;
+    const noodlesTotal = noodles * RATES.noodles;
+    const edamameTotal = edamame * RATES.edamame;
+    const gyozaTotal = gyoza * RATES.gyoza;
+
+    const rawFood =
+      adultTotal +
+      kidTotal +
+      scallopTotal +
+      filetTotal +
+      lobsterTotal +
+      extraProteinTotal +
+      noodlesTotal +
+      edamameTotal +
+      gyozaTotal;
+
+    const hasGuests = adults + kids > 0;
+    const foodSubtotal = hasGuests ? Math.max(rawFood, RATES.minFood) : rawFood;
+    const minimumBump = hasGuests && rawFood < RATES.minFood ? RATES.minFood - rawFood : 0;
+    const preTipTotal = foodSubtotal + travel;
+
+    const lines = [];
+    if (adults) addLine(lines, `Adults (${adults} × $${RATES.adult})`, adultTotal);
+    if (kids) addLine(lines, `Kids under 12 (${kids} × $${RATES.kid})`, kidTotal);
+    if (scallop) addLine(lines, `Scallop upgrades (${scallop})`, scallopTotal);
+    if (filet) addLine(lines, `Filet upgrades (${filet})`, filetTotal);
+    if (lobster) addLine(lines, `Lobster upgrades (${lobster})`, lobsterTotal);
+    if (extraProtein) addLine(lines, `3rd protein (${extraProtein})`, extraProteinTotal);
+    if (noodles) addLine(lines, `Noodles (${noodles})`, noodlesTotal);
+    if (edamame) addLine(lines, `Edamame (${edamame})`, edamameTotal);
+    if (gyoza) addLine(lines, `Gyoza (${gyoza})`, gyozaTotal);
+    if (minimumBump) addLine(lines, 'Event minimum adjustment', minimumBump, { muted: true });
+    if (travel) addLine(lines, 'Estimated travel fee', travel);
+    if (!lines.length) {
+      lines.push({ label: 'Enter guest counts to begin', amount: 0, muted: true });
+    }
+    addLine(lines, 'Estimated total (before tip)', preTipTotal, { total: true });
+
+    const tipLines = [20, 25, 30].map(pct => ({
+      label: `${pct}% gratuity`,
+      amount: Math.round(preTipTotal * (pct / 100)),
+    }));
+
+    renderLines(linesEl, lines);
+    renderLines(tipLinesEl, tipLines);
+
+    const tip20 = Math.round(preTipTotal * 0.2);
+    const hasEstimate = hasGuests || travel || rawFood;
+    heroTotalEl.textContent = hasEstimate ? money(preTipTotal) : '$0';
+    heroSubEl.textContent = hasEstimate
+      ? `Before tip · about ${money(preTipTotal + tip20)} with 20% gratuity`
+      : 'Start with guest counts below';
+
+    return { adults, kids, scallop, filet, lobster, extraProtein, noodles, edamame, gyoza, travel, preTipTotal, tip20 };
+  }
+
+  function setStepValue(id, delta) {
+    const input = document.getElementById(id);
+    if (!input) return;
+    input.value = String(Math.max(0, val(input) + delta));
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  function syncTravelChips(amount) {
+    page.querySelectorAll('[data-travel-preset]').forEach(chip => {
+      const preset = Number(chip.dataset.travelPreset);
+      const match = preset === 200 ? amount >= 200 : amount === preset;
+      chip.classList.toggle('is-active', match);
+    });
+  }
+
+  function resetForm() {
+    Object.values(fields).forEach(el => {
+      if (el) el.value = '0';
+    });
+    syncTravelChips(0);
+    calculate();
+  }
+
+  function copyQuote() {
+    const data = calculate();
+    const text = [
+      'Hibachi2Party — Cost Estimate',
+      '',
+      `Adults: ${data.adults}`,
+      `Kids under 12: ${data.kids}`,
+      `Scallop upgrades: ${data.scallop}`,
+      `Filet upgrades: ${data.filet}`,
+      `Lobster upgrades: ${data.lobster}`,
+      `3rd protein: ${data.extraProtein}`,
+      `Noodles: ${data.noodles}`,
+      `Edamame: ${data.edamame}`,
+      `Gyoza: ${data.gyoza}`,
+      `Travel fee: $${data.travel}`,
+      '',
+      `Estimated total (before tip): $${data.preTipTotal}`,
+      `With 20% gratuity: $${data.preTipTotal + data.tip20}`,
+      '',
+      'Estimates are for planning only. $500 food minimum before travel & tips.',
+      'hibachi2partys.com',
+    ].join('\n');
+
+    navigator.clipboard?.writeText(text).then(() => {
+      if (!copyBtn) return;
+      const prev = copyBtn.textContent;
+      copyBtn.textContent = 'Copied!';
+      window.setTimeout(() => {
+        copyBtn.textContent = prev;
+      }, 1800);
+    });
+  }
+
+  Object.values(fields).forEach(el => {
+    el?.addEventListener('input', () => {
+      if (el === fields.travel) syncTravelChips(Math.max(0, Number(el.value) || 0));
+      calculate();
+    });
+  });
+
+  page.querySelectorAll('[data-step-target]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setStepValue(btn.dataset.stepTarget, Number(btn.dataset.stepDelta));
+    });
+  });
+
+  page.querySelectorAll('[data-travel-preset]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const preset = Number(chip.dataset.travelPreset);
+      if (fields.travel) {
+        fields.travel.value = String(preset === 200 ? 200 : preset);
+        fields.travel.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    });
+  });
+
+  resetBtn?.addEventListener('click', resetForm);
+  copyBtn?.addEventListener('click', copyQuote);
+  calculate();
+}
+
+initEstimationCalculator();
