@@ -1519,19 +1519,28 @@ textarea.form-control { resize: vertical; min-height: 130px; }
   flex-direction: column;
   gap: 1.25rem;
   align-items: stretch;
-  max-width: 720px;
-  margin: 0 auto;
+  width: 100%;
 }
 .estimate-summary-card {
   margin-top: 0.25rem;
 }
-@media (min-width: 768px) {
-  .estimate-layout { gap: 1.5rem; }
+@media (min-width: 992px) {
+  .estimate-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .estimate-form-card {
+    grid-column: 1;
+    grid-row: 1;
+  }
   .estimate-summary-card {
-    max-width: 420px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: calc(var(--nav-h, 80px) + 1rem);
+    margin-top: 0;
   }
 }
 .estimate-form-card,
