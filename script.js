@@ -849,36 +849,77 @@ initEstimationCalculator();
 
 /* ---- Acuity iframe booking → Google Ads conversion ---- */
 function initAcuityConversionTracking() {
-  // Create "Acuity booking confirmed" in Google Ads, then paste the full send_to value here.
-  // Example: AW-11499729036/AbCdEfGhIjKlMnOpQr
   const ACUITY_BOOKING_SEND_TO = 'AW-11499729036/0EDOCMWuxbscEIzhv-sq';
 
-  const ACUITY_ORIGINS = new Set([
-    'https://app.acuityscheduling.com',
-    'https://embed.acuityscheduling.com',
-    'https://hibachi2party.as.me',
-  ]);
+  if (typeof gtag === 'function') {
+    gtag('config', 'AW-11499729036', { allow_enhanced_conversions: true });
+  }
+
+  function isAcuityOrigin(origin) {
+    try {
+      const host = new URL(origin).hostname;
+      return (
+        host === 'hibachi2party.as.me' ||
+        host.endsWith('.acuityscheduling.com') ||
+        host.endsWith('.acuityinnovation.com')
+      );
+    } catch {
+      return false;
+    }
+  }
 
   function isPlaceholder(value) {
     return !value || /^%[a-z]+%$/i.test(String(value).trim());
   }
 
-  window.addEventListener('message', (ev) => {
-    if (!ACUITY_ORIGINS.has(ev.origin)) return;
-    const data = ev.data;
-    if (!data || typeof data !== 'object') return;
-    if (data.type !== 'Acuity_Scheduled' || data.source !== 'acuity') return;
+  function parseMessageData(raw) {
+    if (!raw) return null;
+    if (typeof raw === 'string') {
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return null;
+      }
+    }
+    return typeof raw === 'object' ? raw : null;
+  }
 
-    const appointmentId = String(data.appointmentId || '').trim();
+  function isAcuityBooking(data) {
+    if (!data) return false;
+    if (data.source === 'acuity' && data.type === 'Acuity_Scheduled') return true;
+    if (data.event === 'AcuityEvent') return true;
+    const kind = String(data.type || data.Type || '').toLowerCase();
+    return kind === 'appointment' || kind === 'order';
+  }
+
+  function readAppointmentId(data) {
+    return String(data.appointmentId || data.ID || data.id || '').trim();
+  }
+
+  function readEmail(data) {
+    return String(data.email || data.Email || '').trim();
+  }
+
+  function readPrice(data) {
+    return String(data.price || data.Price || '').trim();
+  }
+
+  window.addEventListener('message', (ev) => {
+    if (!isAcuityOrigin(ev.origin)) return;
+
+    const data = parseMessageData(ev.data);
+    if (!isAcuityBooking(data)) return;
+
+    const appointmentId = readAppointmentId(data);
     if (isPlaceholder(appointmentId)) return;
 
     const dedupeKey = 'acuity_booking_' + appointmentId;
     if (sessionStorage.getItem(dedupeKey)) return;
     sessionStorage.setItem(dedupeKey, '1');
 
-    const priceRaw = String(data.price || '').trim();
+    const priceRaw = readPrice(data);
     const value = isPlaceholder(priceRaw) ? 0 : Number.parseFloat(priceRaw.replace(/[^0-9.]/g, '')) || 0;
-    const email = String(data.email || '').trim();
+    const email = readEmail(data);
 
     if (typeof gtag !== 'function') return;
 
@@ -886,14 +927,12 @@ function initAcuityConversionTracking() {
       gtag('set', 'user_data', { email });
     }
 
-    if (!ACUITY_BOOKING_SEND_TO.includes('REPLACE_WITH_CONVERSION_LABEL')) {
-      gtag('event', 'conversion', {
-        send_to: ACUITY_BOOKING_SEND_TO,
-        value,
-        currency: 'USD',
-        transaction_id: appointmentId,
-      });
-    }
+    gtag('event', 'conversion', {
+      send_to: ACUITY_BOOKING_SEND_TO,
+      value,
+      currency: 'USD',
+      transaction_id: appointmentId,
+    });
   });
 }
 
