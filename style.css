@@ -244,17 +244,23 @@ a.btn { cursor: pointer; position: relative; z-index: 1; }
 }
 
 .hamburger {
-  display: none; flex-direction: column; gap: 5px;
+  display: none; flex-direction: column; gap: 6px;
   padding: 8px; cursor: pointer; z-index: 10000;
+  align-items: center; justify-content: center;
+  border: none; background: transparent;
 }
 .hamburger span {
   display: block; width: 24px; height: 2px;
   background: var(--text); border-radius: 2px;
-  transition: var(--transition);
+  transform-origin: center;
+  transition:
+    transform 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.22s ease,
+    background 0.28s ease;
 }
-.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-.hamburger.open span:nth-child(2) { opacity: 0; }
-.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+.hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
 /* ---- Hero ---- */
 .hero {
@@ -2651,7 +2657,21 @@ footer {
   .navbar .nav-menu { display: none; }
   .navbar .nav-cta .btn:not(.btn-primary) { display: none; }
   .nav-social { display: none; }
-  .hamburger { display: flex; }
+  .nav-inner {
+    padding-right: 2.75rem;
+  }
+  .hamburger {
+    display: flex;
+    position: fixed;
+    top: calc(0.75rem + env(safe-area-inset-top, 0px));
+    right: calc(1rem + env(safe-area-inset-right, 0px));
+    z-index: 10003;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    margin: 0;
+    gap: 6px;
+  }
 
   body.nav-open .navbar {
     z-index: 10002;
@@ -2670,32 +2690,12 @@ footer {
     pointer-events: none;
   }
   body.nav-open .hamburger {
-    position: fixed;
-    top: calc(0.75rem + env(safe-area-inset-top, 0px));
-    right: calc(1rem + env(safe-area-inset-right, 0px));
-    z-index: 10003;
-    display: flex;
-    padding: 12px;
-    margin: 0;
-    border: none;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
     pointer-events: auto;
   }
   body.nav-open .hamburger span,
-  body.nav-open .hamburger.open span,
   body.page-home.nav-open .navbar .hamburger span,
   body.page-home.nav-open .navbar:not(.scrolled) .hamburger span {
     background: #1a1a1a;
-    height: 2.5px;
-    width: 26px;
-  }
-  body.nav-open .hamburger.open span:nth-child(1) {
-    transform: rotate(45deg) translate(6px, 6px);
-  }
-  body.nav-open .hamburger.open span:nth-child(3) {
-    transform: rotate(-45deg) translate(6px, -6px);
   }
   .nav-menu.open {
     display: flex; flex-direction: column;
