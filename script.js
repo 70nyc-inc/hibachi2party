@@ -846,3 +846,55 @@ function initEstimationCalculator() {
 }
 
 initEstimationCalculator();
+
+/* ---- Acuity iframe booking → Google Ads conversion ---- */
+function initAcuityConversionTracking() {
+  // Create "Acuity booking confirmed" in Google Ads, then paste the full send_to value here.
+  // Example: AW-11499729036/AbCdEfGhIjKlMnOpQr
+  const ACUITY_BOOKING_SEND_TO = 'AW-11499729036/0EDOCMWuxbscEIzhv-sq';
+
+  const ACUITY_ORIGINS = new Set([
+    'https://app.acuityscheduling.com',
+    'https://embed.acuityscheduling.com',
+    'https://hibachi2party.as.me',
+  ]);
+
+  function isPlaceholder(value) {
+    return !value || /^%[a-z]+%$/i.test(String(value).trim());
+  }
+
+  window.addEventListener('message', (ev) => {
+    if (!ACUITY_ORIGINS.has(ev.origin)) return;
+    const data = ev.data;
+    if (!data || typeof data !== 'object') return;
+    if (data.type !== 'Acuity_Scheduled' || data.source !== 'acuity') return;
+
+    const appointmentId = String(data.appointmentId || '').trim();
+    if (isPlaceholder(appointmentId)) return;
+
+    const dedupeKey = 'acuity_booking_' + appointmentId;
+    if (sessionStorage.getItem(dedupeKey)) return;
+    sessionStorage.setItem(dedupeKey, '1');
+
+    const priceRaw = String(data.price || '').trim();
+    const value = isPlaceholder(priceRaw) ? 0 : Number.parseFloat(priceRaw.replace(/[^0-9.]/g, '')) || 0;
+    const email = String(data.email || '').trim();
+
+    if (typeof gtag !== 'function') return;
+
+    if (!isPlaceholder(email)) {
+      gtag('set', 'user_data', { email });
+    }
+
+    if (!ACUITY_BOOKING_SEND_TO.includes('REPLACE_WITH_CONVERSION_LABEL')) {
+      gtag('event', 'conversion', {
+        send_to: ACUITY_BOOKING_SEND_TO,
+        value,
+        currency: 'USD',
+        transaction_id: appointmentId,
+      });
+    }
+  });
+}
+
+initAcuityConversionTracking();
