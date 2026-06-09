@@ -215,6 +215,24 @@ function initAmbientEffects() {
 }
 initAmbientEffects();
 
+/* ---- Hero video (mobile autoplay) ---- */
+const heroVideo = document.querySelector('video.hero-bg');
+if (heroVideo) {
+  heroVideo.muted = true;
+  heroVideo.setAttribute('playsinline', '');
+  heroVideo.setAttribute('webkit-playsinline', '');
+  const tryPlayHero = () => {
+    const p = heroVideo.play();
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  };
+  if (heroVideo.readyState >= 2) tryPlayHero();
+  else heroVideo.addEventListener('loadeddata', tryPlayHero, { once: true });
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) tryPlayHero();
+  });
+  window.addEventListener('pageshow', tryPlayHero);
+}
+
 /* ---- Hero parallax ---- */
 const heroBg = document.querySelector('.hero-bg');
 if (heroBg) {
