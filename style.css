@@ -543,6 +543,76 @@ a.btn { cursor: pointer; position: relative; z-index: 1; }
 .gallery-masonry {
   columns: 4; column-gap: 0.75rem;
 }
+.instagram-profile {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+}
+.instagram-profile-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--border);
+}
+.instagram-profile-icon {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+  color: #fff;
+}
+.instagram-profile-body { min-width: 0; }
+.instagram-profile-handle {
+  margin: 0 0 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.instagram-profile-handle a { color: var(--primary); text-decoration: none; }
+.instagram-profile-handle a:hover { text-decoration: underline; }
+.instagram-profile-name {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-head);
+  font-size: 1.15rem;
+  line-height: 1.3;
+}
+.instagram-profile-bio {
+  margin: 0 0 0.65rem;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+.instagram-profile-stats,
+.instagram-profile-note {
+  margin: 0 0 1rem;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+.instagram-embed-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+.instagram-embed-item {
+  min-width: 0;
+}
+.instagram-embed-item .instagram-media {
+  margin: 0 !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
 .gallery-masonry .gal-item {
   break-inside: avoid; margin-bottom: 0.75rem;
   border-radius: 8px; overflow: hidden;
@@ -2617,6 +2687,9 @@ footer {
   .booking-card-footer { flex-wrap: wrap; }
   .gallery-item.wide { grid-column: span 2; }
   .gallery-masonry { columns: 2; }
+  .instagram-profile { flex-direction: column; align-items: center; text-align: center; }
+  .instagram-profile-body { width: 100%; }
+  .instagram-embed-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .payment-methods { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
   .contact-grid { grid-template-columns: 1fr; }
   .about-intro { grid-template-columns: 1fr; }
@@ -2646,6 +2719,7 @@ footer {
   .gallery-grid { grid-template-columns: 1fr; }
   .gallery-item.wide { grid-column: span 1; aspect-ratio: 1; }
   .gallery-masonry { columns: 1; }
+  .instagram-embed-grid { grid-template-columns: 1fr; }
   .occasions-grid { grid-template-columns: 1fr; }
   .areas-grid { grid-template-columns: 1fr; }
   .section-title { font-size: 2rem; }
