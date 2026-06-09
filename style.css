@@ -2683,7 +2683,10 @@ footer {
     box-shadow: none;
     pointer-events: auto;
   }
-  body.nav-open .hamburger span {
+  body.nav-open .hamburger span,
+  body.nav-open .hamburger.open span,
+  body.page-home.nav-open .navbar .hamburger span,
+  body.page-home.nav-open .navbar:not(.scrolled) .hamburger span {
     background: #1a1a1a;
     height: 2.5px;
     width: 26px;
