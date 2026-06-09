@@ -621,13 +621,10 @@ function initEstimationCalculator() {
     gyoza: document.getElementById('est-gyoza'),
     travel: document.getElementById('est-travel'),
   };
-  const linesEl = document.getElementById('est-lines');
-  const tipLinesEl = document.getElementById('est-tip-lines');
-  const heroTotalEl = document.getElementById('est-hero-total');
-  const heroSubEl = document.getElementById('est-hero-sub');
+  const receiptEl = document.getElementById('est-receipt');
   const resetBtn = document.getElementById('est-reset');
   const copyBtn = document.getElementById('est-copy');
-  if (!linesEl || !tipLinesEl || !heroTotalEl || !heroSubEl) return;
+  if (!receiptEl) return;
 
   const RATES = {
     adult: 50,
@@ -642,21 +639,44 @@ function initEstimationCalculator() {
     gyoza: 10,
   };
 
-  const money = n => `$${n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+  const money = n =>
+    `$${Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   const val = el => Math.max(0, Math.floor(Number(el?.value) || 0));
 
-  function addLine(lines, label, amount, { muted = false, total = false } = {}) {
-    if (!amount && !total) return;
-    lines.push({ label, amount, muted, total });
+  function listOrNone(items) {
+    return items.length
+      ? `<ul class="estimate-receipt-list">${items.map(i => `<li>${i}</li>`).join('')}</ul>`
+      : '<ul class="estimate-receipt-list"><li>None</li></ul>';
   }
 
-  function renderLines(container, items) {
-    container.innerHTML = items
-      .map(
-        ({ label, amount, muted, total }) =>
-          `<div class="${muted ? 'estimate-line-muted' : ''}${total ? ' estimate-line-total' : ''}"><dt>${label}</dt><dd>${money(amount)}</dd></div>`
-      )
-      .join('');
+  function buildReceiptText(data) {
+    const lines = [
+      'Hibachi2Party — Cost Estimate',
+      '',
+      `${data.adults} Adults`,
+      `${data.kids} Kids under 12`,
+      '',
+      'Premium upgrades:',
+      ...(data.premiumItems.length ? data.premiumItems.map(i => `- ${i}`) : ['- None']),
+      '',
+      'Appetizers/Extras:',
+      ...(data.extraItems.length ? data.extraItems.map(i => `- ${i}`) : ['- None']),
+      '',
+      `Traveling fees: ${money(data.travel)}`,
+      '',
+      'Calculation:',
+      ...data.calcLines.map(l => `- ${l}`),
+      `Food total: ${money(data.foodSubtotal)}`,
+      `Total cash: ${money(data.foodSubtotal)} + ${money(data.travel)} = ${money(data.preTipTotal)}`,
+      '',
+      'Tips Suggestion',
+      ...data.tipLines.map(l => `- ${l}`),
+      '',
+      '* Gratuity and sales tax not included in Total cash.',
+      'Sales tax varies by event state/location.',
+      'hibachi2partys.com',
+    ];
+    return lines.join('\n');
   }
 
   function calculate() {
@@ -676,60 +696,83 @@ function initEstimationCalculator() {
     const scallopTotal = scallop * RATES.scallop;
     const filetTotal = filet * RATES.filet;
     const lobsterTotal = lobster * RATES.lobster;
+    const premiumTotal = scallopTotal + filetTotal + lobsterTotal;
     const extraProteinTotal = extraProtein * RATES.extraProtein;
     const noodlesTotal = noodles * RATES.noodles;
     const edamameTotal = edamame * RATES.edamame;
     const gyozaTotal = gyoza * RATES.gyoza;
+    const extrasTotal = extraProteinTotal + noodlesTotal + edamameTotal + gyozaTotal;
 
-    const rawFood =
-      adultTotal +
-      kidTotal +
-      scallopTotal +
-      filetTotal +
-      lobsterTotal +
-      extraProteinTotal +
-      noodlesTotal +
-      edamameTotal +
-      gyozaTotal;
-
+    const rawFood = adultTotal + kidTotal + premiumTotal + extrasTotal;
     const hasGuests = adults + kids > 0;
+
     const foodSubtotal = hasGuests ? Math.max(rawFood, RATES.minFood) : rawFood;
     const minimumBump = hasGuests && rawFood < RATES.minFood ? RATES.minFood - rawFood : 0;
     const preTipTotal = foodSubtotal + travel;
 
-    const lines = [];
-    if (adults) addLine(lines, `Adults (${adults} × $${RATES.adult})`, adultTotal);
-    if (kids) addLine(lines, `Kids under 12 (${kids} × $${RATES.kid})`, kidTotal);
-    if (scallop) addLine(lines, `Scallop upgrades (${scallop})`, scallopTotal);
-    if (filet) addLine(lines, `Filet upgrades (${filet})`, filetTotal);
-    if (lobster) addLine(lines, `Lobster upgrades (${lobster})`, lobsterTotal);
-    if (extraProtein) addLine(lines, `3rd protein (${extraProtein})`, extraProteinTotal);
-    if (noodles) addLine(lines, `Noodles (${noodles})`, noodlesTotal);
-    if (edamame) addLine(lines, `Edamame (${edamame})`, edamameTotal);
-    if (gyoza) addLine(lines, `Gyoza (${gyoza})`, gyozaTotal);
-    if (minimumBump) addLine(lines, 'Event minimum adjustment', minimumBump, { muted: true });
-    if (travel) addLine(lines, 'Estimated travel fee', travel);
-    if (!lines.length) {
-      lines.push({ label: 'Enter guest counts to begin', amount: 0, muted: true });
-    }
-    addLine(lines, 'Estimated total (before tip)', preTipTotal, { total: true });
+    const premiumItems = [];
+    if (scallop) premiumItems.push(`Scallops × ${scallop}`);
+    if (filet) premiumItems.push(`Filet Mignon × ${filet}`);
+    if (lobster) premiumItems.push(`Lobster × ${lobster}`);
 
-    const tipLines = [20, 25, 30].map(pct => ({
-      label: `${pct}% gratuity`,
-      amount: Math.round(preTipTotal * (pct / 100)),
-    }));
+    const extraItems = [];
+    if (extraProtein) extraItems.push(`3rd protein × ${extraProtein}`);
+    if (noodles) extraItems.push(`Noodles × ${noodles}`);
+    if (edamame) extraItems.push(`Edamame × ${edamame}`);
+    if (gyoza) extraItems.push(`Gyoza × ${gyoza}`);
 
-    renderLines(linesEl, lines);
-    renderLines(tipLinesEl, tipLines);
+    const calcLines = [
+      `Adults: ${adults} × $${RATES.adult} = ${money(adultTotal)}`,
+      `Kids: ${kids} × $${RATES.kid} = ${money(kidTotal)}`,
+      `Premium upgrades: ${money(premiumTotal)}`,
+    ];
+    calcLines.push(`Appetizers/Extras: ${money(extrasTotal)}`);
+    if (minimumBump) calcLines.push(`Event minimum adjustment: ${money(minimumBump)}`);
 
-    const tip20 = Math.round(preTipTotal * 0.2);
-    const hasEstimate = hasGuests || travel || rawFood;
-    heroTotalEl.textContent = hasEstimate ? money(preTipTotal) : '$0';
-    heroSubEl.textContent = hasEstimate
-      ? `Before tip · about ${money(preTipTotal + tip20)} with 20% gratuity`
-      : 'Start with guest counts below';
+    const tipLines = [20, 25, 30].map(
+      pct => `${pct}% tips: ${money(preTipTotal * (pct / 100))}`
+    );
 
-    return { adults, kids, scallop, filet, lobster, extraProtein, noodles, edamame, gyoza, travel, preTipTotal, tip20 };
+    const data = {
+      adults,
+      kids,
+      travel,
+      premiumItems,
+      extraItems,
+      calcLines,
+      foodSubtotal,
+      preTipTotal,
+      tipLines,
+    };
+
+    receiptEl.innerHTML = `
+      <div class="estimate-receipt-brand">Hibachi2Party</div>
+      <div class="estimate-receipt-meta">Hibachi at Home · Estimate</div>
+      <hr class="estimate-receipt-divider">
+      <div class="estimate-receipt-line">${adults} Adults</div>
+      <div class="estimate-receipt-line">${kids} Kids under 12</div>
+      <hr class="estimate-receipt-divider">
+      <div class="estimate-receipt-label">Premium upgrades:</div>
+      ${listOrNone(premiumItems)}
+      <div class="estimate-receipt-label">Appetizers/Extras:</div>
+      ${listOrNone(extraItems)}
+      <div class="estimate-receipt-line">Traveling fees: ${money(travel)}</div>
+      <hr class="estimate-receipt-divider">
+      <div class="estimate-receipt-label">Calculation:</div>
+      <ul class="estimate-receipt-list estimate-receipt-calc">
+        ${calcLines.map(line => `<li>${line}</li>`).join('')}
+      </ul>
+      <div class="estimate-receipt-total">Food total: ${money(foodSubtotal)}</div>
+      <div class="estimate-receipt-total estimate-receipt-total-strong">Total cash: ${money(foodSubtotal)} + ${money(travel)} = ${money(preTipTotal)}</div>
+      <hr class="estimate-receipt-divider">
+      <div class="estimate-receipt-label">Tips Suggestion</div>
+      <ul class="estimate-receipt-list">
+        ${tipLines.map(line => `<li>${line}</li>`).join('')}
+      </ul>
+      <p class="estimate-receipt-fineprint">* Gratuity and sales tax not included in Total cash.<br>Sales tax varies by event state/location.</p>
+    `;
+
+    return { ...data, receiptText: buildReceiptText(data) };
   }
 
   function setStepValue(id, delta) {
@@ -757,28 +800,8 @@ function initEstimationCalculator() {
 
   function copyQuote() {
     const data = calculate();
-    const text = [
-      'Hibachi2Party — Cost Estimate',
-      '',
-      `Adults: ${data.adults}`,
-      `Kids under 12: ${data.kids}`,
-      `Scallop upgrades: ${data.scallop}`,
-      `Filet upgrades: ${data.filet}`,
-      `Lobster upgrades: ${data.lobster}`,
-      `3rd protein: ${data.extraProtein}`,
-      `Noodles: ${data.noodles}`,
-      `Edamame: ${data.edamame}`,
-      `Gyoza: ${data.gyoza}`,
-      `Travel fee: $${data.travel}`,
-      '',
-      `Estimated total (before tip): $${data.preTipTotal}`,
-      `With 20% gratuity: $${data.preTipTotal + data.tip20}`,
-      '',
-      'Estimates are for planning only. $500 food minimum before travel & tips.',
-      'hibachi2partys.com',
-    ].join('\n');
 
-    navigator.clipboard?.writeText(text).then(() => {
+    navigator.clipboard?.writeText(data.receiptText).then(() => {
       if (!copyBtn) return;
       const prev = copyBtn.textContent;
       copyBtn.textContent = 'Copied!';
