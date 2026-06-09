@@ -80,7 +80,7 @@
 
       <div class="estimate-form-card">
         <h2 class="estimate-form-title" id="estimate-title">Build your estimate</h2>
-        <p class="estimate-form-sub">Tap +/− to adjust. Optional sections can stay at zero.</p>
+        <p class="estimate-form-sub">Follow the 4 steps below. Tap +/− to adjust — steps 2–3 are optional.</p>
 
         <div class="estimate-step-block">
           <h3 class="estimate-step-title"><span class="estimate-step-num">1</span> How many guests?</h3>
@@ -108,12 +108,11 @@
           </div>
         </div>
 
-        <p class="estimate-protein-note">Each guest gets two proteins (Chicken · Steak · Shrimp · Salmon · Tofu).</p>
-
-        <details class="estimate-panel" open>
-          <summary class="estimate-panel-summary"><span>Premium protein upgrades</span><span class="estimate-panel-badge">Optional</span></summary>
+        <div class="estimate-step-block">
+          <h3 class="estimate-step-title"><span class="estimate-step-num">2</span> Premium protein upgrades <span class="estimate-step-optional">optional</span></h3>
+          <p class="estimate-protein-note">Each guest gets two proteins (Chicken · Steak · Shrimp · Salmon · Tofu).</p>
           <p class="estimate-panel-desc">Count how many servings get scallops, filet or lobster on top of the included 2 proteins.</p>
-          <div class="estimate-rows">
+          <div class="estimate-rows estimate-rows-open">
         <div class="estimate-row">
           <div class="estimate-row-text">
             <span class="estimate-row-label">Scallops</span>
@@ -148,11 +147,11 @@
           </div>
         </div>
           </div>
-        </details>
+        </div>
 
-        <details class="estimate-panel" open>
-          <summary class="estimate-panel-summary"><span>Extras &amp; appetizers</span><span class="estimate-panel-badge">Optional</span></summary>
-          <div class="estimate-rows">
+        <div class="estimate-step-block">
+          <h3 class="estimate-step-title"><span class="estimate-step-num">3</span> Extras &amp; appetizers <span class="estimate-step-optional">optional</span></h3>
+          <div class="estimate-rows estimate-rows-open">
         <div class="estimate-row">
           <div class="estimate-row-text">
             <span class="estimate-row-label">3rd protein</span>
@@ -198,11 +197,11 @@
           </div>
         </div>
           </div>
-        </details>
+        </div>
 
         <div class="estimate-step-block">
-          <h3 class="estimate-step-title"><span class="estimate-step-num">2</span> Travel fee <span class="estimate-step-optional">estimate</span></h3>
-          <p class="estimate-panel-desc">Pick a rough amount — we confirm the final fee for your address.</p>
+          <h3 class="estimate-step-title"><span class="estimate-step-num">4</span> Travel fee <span class="estimate-step-optional">based on distance</span></h3>
+          <p class="estimate-panel-desc">Travel fees vary by distance to your event location. Pick a rough estimate below — we confirm the final fee for your address.</p>
           <div class="estimate-travel-presets" role="group" aria-label="Travel fee presets">
             <button type="button" class="estimate-chip is-active" data-travel-preset="0">$0</button>
             <button type="button" class="estimate-chip" data-travel-preset="50">$50</button>

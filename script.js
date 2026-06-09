@@ -662,7 +662,7 @@ function initEstimationCalculator() {
       'Appetizers/Extras:',
       ...(data.extraItems.length ? data.extraItems.map(i => `- ${i}`) : ['- None']),
       '',
-      `Traveling fees: ${money(data.travel)}`,
+      `Traveling fees (distance-based): ${money(data.travel)}`,
       '',
       'Calculation:',
       ...data.calcLines.map(l => `- ${l}`),
@@ -756,7 +756,7 @@ function initEstimationCalculator() {
       ${listOrNone(premiumItems)}
       <div class="estimate-receipt-label">Appetizers/Extras:</div>
       ${listOrNone(extraItems)}
-      <div class="estimate-receipt-line">Traveling fees: ${money(travel)}</div>
+      <div class="estimate-receipt-line">Traveling fees (distance-based): ${money(travel)}</div>
       <hr class="estimate-receipt-divider">
       <div class="estimate-receipt-label">Calculation:</div>
       <ul class="estimate-receipt-list estimate-receipt-calc">

@@ -1650,8 +1650,20 @@ textarea.form-control { resize: vertical; min-height: 130px; }
   color: var(--text-muted);
   margin-bottom: 0.25rem;
 }
+.estimate-step-block + .estimate-step-block {
+  padding-top: 0.15rem;
+  border-top: 1px solid var(--border);
+  margin-top: 0.25rem;
+}
+.estimate-rows-open {
+  padding: 0;
+  margin-top: 0.35rem;
+}
+.estimate-rows-open .estimate-row:first-child {
+  border-top: 0;
+}
 .estimate-protein-note {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.65rem;
   padding: 0.75rem 1rem;
   border-radius: var(--radius);
   background: rgba(220, 38, 38, 0.06);
