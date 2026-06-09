@@ -1515,25 +1515,23 @@ textarea.form-control { resize: vertical; min-height: 130px; }
   color: var(--text-muted);
 }
 .estimate-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 1.25rem;
-  align-items: start;
+  align-items: stretch;
+  max-width: 720px;
+  margin: 0 auto;
 }
-@media (min-width: 992px) {
-  .estimate-layout {
-    grid-template-columns: minmax(320px, 400px) minmax(0, 1fr);
-    gap: 1.5rem;
-  }
+.estimate-summary-card {
+  margin-top: 0.25rem;
+}
+@media (min-width: 768px) {
+  .estimate-layout { gap: 1.5rem; }
   .estimate-summary-card {
-    position: sticky;
-    top: calc(var(--nav-h, 80px) + 1rem);
-    grid-column: 1;
-    grid-row: 1;
-  }
-  .estimate-form-card {
-    grid-column: 2;
-    grid-row: 1;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
   }
 }
 .estimate-form-card,
