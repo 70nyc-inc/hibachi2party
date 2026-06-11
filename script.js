@@ -656,13 +656,12 @@ function stateBlock(stateCode) {
 }
 
 function paintLocationsHighlight(regionId, stateCode = '') {
-  document.querySelectorAll('.locations-us-map path.served[data-region]').forEach(path => {
-    const inRegion = path.dataset.region === regionId;
-    const match = stateCode ? path.dataset.state === stateCode : inRegion;
-    path.classList.toggle('map-region-active', Boolean(regionId && match));
-  });
   document.querySelectorAll('.locations-region[data-region]').forEach(panel => {
-    panel.classList.toggle('locations-region-hover', panel.dataset.region === regionId);
+    const active = panel.dataset.region === regionId;
+    panel.classList.toggle('locations-region-hover', active);
+    panel.classList.toggle('is-active', active);
+    if (active) panel.setAttribute('aria-current', stateCode ? 'true' : 'region');
+    else panel.removeAttribute('aria-current');
   });
   document.querySelectorAll('.locations-jump a[href^="#region-"]').forEach(link => {
     const id = link.getAttribute('href').replace('#region-', '');

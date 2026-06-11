@@ -1231,22 +1231,26 @@ a.btn { cursor: pointer; position: relative; z-index: 1; }
 .locations-region-midwest { border-top-color: rgba(37, 99, 235, 0.85); }
 .locations-region-west { border-top-color: rgba(124, 58, 237, 0.85); }
 .locations-region-northeast.locations-region-focus,
-.locations-region-northeast.locations-region-hover {
+.locations-region-northeast.locations-region-hover,
+.locations-region-northeast.is-active {
   border-color: rgba(220, 38, 38, 0.45);
   box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12), 0 12px 32px rgba(220, 38, 38, 0.1);
 }
 .locations-region-south.locations-region-focus,
-.locations-region-south.locations-region-hover {
+.locations-region-south.locations-region-hover,
+.locations-region-south.is-active {
   border-color: rgba(234, 88, 12, 0.45);
   box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.12), 0 12px 32px rgba(234, 88, 12, 0.1);
 }
 .locations-region-midwest.locations-region-focus,
-.locations-region-midwest.locations-region-hover {
+.locations-region-midwest.locations-region-hover,
+.locations-region-midwest.is-active {
   border-color: rgba(37, 99, 235, 0.45);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12), 0 12px 32px rgba(37, 99, 235, 0.1);
 }
 .locations-region-west.locations-region-focus,
-.locations-region-west.locations-region-hover {
+.locations-region-west.locations-region-hover,
+.locations-region-west.is-active {
   border-color: rgba(124, 58, 237, 0.45);
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12), 0 12px 32px rgba(124, 58, 237, 0.1);
 }
@@ -1293,23 +1297,31 @@ a.btn { cursor: pointer; position: relative; z-index: 1; }
 }
 .locations-region-northeast .locations-state-block.is-active,
 .locations-region-northeast .locations-state-block.locations-state-focus {
-  border-color: rgba(220, 38, 38, 0.45);
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12), 0 12px 32px rgba(220, 38, 38, 0.1);
+  border-color: rgba(220, 38, 38, 0.55);
+  background: rgba(220, 38, 38, 0.04);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.16), 0 12px 32px rgba(220, 38, 38, 0.12);
+  transform: translateY(-2px);
 }
 .locations-region-south .locations-state-block.is-active,
 .locations-region-south .locations-state-block.locations-state-focus {
-  border-color: rgba(234, 88, 12, 0.45);
-  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.12), 0 12px 32px rgba(234, 88, 12, 0.1);
+  border-color: rgba(234, 88, 12, 0.55);
+  background: rgba(234, 88, 12, 0.04);
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.16), 0 12px 32px rgba(234, 88, 12, 0.12);
+  transform: translateY(-2px);
 }
 .locations-region-midwest .locations-state-block.is-active,
 .locations-region-midwest .locations-state-block.locations-state-focus {
-  border-color: rgba(37, 99, 235, 0.45);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12), 0 12px 32px rgba(37, 99, 235, 0.1);
+  border-color: rgba(37, 99, 235, 0.55);
+  background: rgba(37, 99, 235, 0.04);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16), 0 12px 32px rgba(37, 99, 235, 0.12);
+  transform: translateY(-2px);
 }
 .locations-region-west .locations-state-block.is-active,
 .locations-region-west .locations-state-block.locations-state-focus {
-  border-color: rgba(124, 58, 237, 0.45);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12), 0 12px 32px rgba(124, 58, 237, 0.1);
+  border-color: rgba(124, 58, 237, 0.55);
+  background: rgba(124, 58, 237, 0.04);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.16), 0 12px 32px rgba(124, 58, 237, 0.12);
+  transform: translateY(-2px);
 }
 .locations-state-block:hover {
   background: var(--white);
