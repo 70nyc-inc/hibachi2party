@@ -617,21 +617,41 @@ if (location.hash) {
 }
 
 /* ---- Locations map: click/hover state to jump & highlight region ---- */
+const LOCATIONS_REGION_IDS = ['northeast', 'south', 'midwest', 'west'];
+let selectedLocationsRegion = '';
+
 function regionPanel(regionId) {
   return document.getElementById(`region-${regionId}`);
 }
 
-function setActiveMapRegion(regionId) {
+function paintLocationsRegionHighlight(regionId) {
   document.querySelectorAll('.locations-us-map path.served[data-region]').forEach(path => {
     path.classList.toggle('map-region-active', path.dataset.region === regionId);
   });
   document.querySelectorAll('.locations-region[data-region]').forEach(panel => {
     panel.classList.toggle('locations-region-hover', panel.dataset.region === regionId);
   });
+  document.querySelectorAll('.locations-jump a[href^="#region-"]').forEach(link => {
+    const id = link.getAttribute('href').replace('#region-', '');
+    const active = id === regionId;
+    link.classList.toggle('is-active', active);
+    if (active) link.setAttribute('aria-current', 'true');
+    else link.removeAttribute('aria-current');
+  });
 }
 
-function clearActiveMapRegion() {
-  setActiveMapRegion('');
+function previewLocationsRegion(regionId) {
+  paintLocationsRegionHighlight(regionId);
+}
+
+function restoreLocationsRegionHighlight() {
+  paintLocationsRegionHighlight(selectedLocationsRegion);
+}
+
+function selectLocationsRegion(regionId) {
+  if (!LOCATIONS_REGION_IDS.includes(regionId)) return;
+  selectedLocationsRegion = regionId;
+  paintLocationsRegionHighlight(regionId);
 }
 
 function scrollToRegion(regionId, behavior = 'smooth') {
@@ -639,11 +659,10 @@ function scrollToRegion(regionId, behavior = 'smooth') {
   if (!target) return;
   const head = target.querySelector('.locations-region-header') || target;
   scrollToElement(head, behavior);
-  setActiveMapRegion(regionId);
+  selectLocationsRegion(regionId);
   target.classList.add('locations-region-focus');
   window.setTimeout(() => {
     target.classList.remove('locations-region-focus');
-    clearActiveMapRegion();
   }, 1600);
 }
 
@@ -651,10 +670,10 @@ document.querySelectorAll('.locations-us-map path.served[data-region]').forEach(
   const regionId = path.dataset.region;
   const go = () => scrollToRegion(regionId);
   path.addEventListener('click', go);
-  path.addEventListener('mouseenter', () => setActiveMapRegion(regionId));
-  path.addEventListener('mouseleave', clearActiveMapRegion);
-  path.addEventListener('focus', () => setActiveMapRegion(regionId));
-  path.addEventListener('blur', clearActiveMapRegion);
+  path.addEventListener('mouseenter', () => previewLocationsRegion(regionId));
+  path.addEventListener('mouseleave', restoreLocationsRegionHighlight);
+  path.addEventListener('focus', () => previewLocationsRegion(regionId));
+  path.addEventListener('blur', restoreLocationsRegionHighlight);
   path.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -665,16 +684,16 @@ document.querySelectorAll('.locations-us-map path.served[data-region]').forEach(
 
 document.querySelectorAll('.locations-region[data-region]').forEach(panel => {
   const regionId = panel.dataset.region;
-  panel.addEventListener('mouseenter', () => setActiveMapRegion(regionId));
-  panel.addEventListener('mouseleave', clearActiveMapRegion);
+  panel.addEventListener('mouseenter', () => previewLocationsRegion(regionId));
+  panel.addEventListener('mouseleave', restoreLocationsRegionHighlight);
 });
 
 document.querySelectorAll('.locations-jump a[href^="#region-"]').forEach(link => {
   const regionId = link.getAttribute('href').replace('#region-', '');
-  link.addEventListener('mouseenter', () => setActiveMapRegion(regionId));
-  link.addEventListener('mouseleave', clearActiveMapRegion);
-  link.addEventListener('focus', () => setActiveMapRegion(regionId));
-  link.addEventListener('blur', clearActiveMapRegion);
+  link.addEventListener('mouseenter', () => previewLocationsRegion(regionId));
+  link.addEventListener('mouseleave', restoreLocationsRegionHighlight);
+  link.addEventListener('focus', () => previewLocationsRegion(regionId));
+  link.addEventListener('blur', restoreLocationsRegionHighlight);
 });
 
 /* ---- Cost estimation calculator ---- */

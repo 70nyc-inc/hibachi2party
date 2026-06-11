@@ -1198,12 +1198,16 @@ a.btn { cursor: pointer; position: relative; z-index: 1; }
   border-radius: 50px;
   transition: background 0.25s, border-color 0.25s, color 0.25s, transform 0.25s, box-shadow 0.25s;
 }
-.locations-jump a:hover {
+.locations-jump a:hover,
+.locations-jump a.is-active {
   color: var(--white);
   background: linear-gradient(135deg, var(--primary), var(--primary-dk));
   border-color: transparent;
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(220,38,38,0.28);
+}
+.locations-jump a.is-active {
+  transform: none;
 }
 .locations-regions {
   max-width: 1080px;
