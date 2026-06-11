@@ -995,3 +995,21 @@ function initAcuityConversionTracking() {
 }
 
 initAcuityConversionTracking();
+
+/* ---- Phone click → Google Ads conversion ---- */
+function initPhoneClickConversionTracking() {
+  const PHONE_CLICK_SEND_TO = 'AW-11499729036/IvNBCIPI27wcEIzhv-sq';
+
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="tel:"]');
+    if (!link || typeof gtag !== 'function') return;
+
+    gtag('event', 'conversion', {
+      send_to: PHONE_CLICK_SEND_TO,
+      value: 1.0,
+      currency: 'USD',
+    });
+  });
+}
+
+initPhoneClickConversionTracking();
