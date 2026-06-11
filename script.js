@@ -421,10 +421,22 @@ const counterObserver = new IntersectionObserver(entries => {
 document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
 
 /* ---- Smooth anchor offset for fixed nav ---- */
-function getNavScrollOffset(gap = 16) {
-  if (navbar) return navbar.offsetHeight + gap;
-  const cssNav = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height'), 10);
-  return (Number.isFinite(cssNav) ? cssNav : 80) + gap;
+function getLocationsJumpOffset() {
+  const jump = document.querySelector('.locations-page .locations-jump');
+  if (!jump) return 0;
+  const style = getComputedStyle(jump);
+  if (style.position !== 'sticky' && style.position !== '-webkit-sticky') return 0;
+  return jump.offsetHeight + 12;
+}
+
+function getNavScrollOffset(gap = 20) {
+  const navHeight = navbar
+    ? navbar.offsetHeight
+    : (() => {
+        const cssNav = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height'), 10);
+        return Number.isFinite(cssNav) ? cssNav : 80;
+      })();
+  return navHeight + gap + getLocationsJumpOffset();
 }
 
 function scrollToElement(element, behavior = 'smooth') {
@@ -698,7 +710,7 @@ function scrollToState(stateCode, regionId, behavior = 'smooth') {
   const region = regionPanel(regionId);
   if (!region) return;
   const block = stateBlock(stateCode);
-  const scrollTarget = block || region.querySelector('.locations-region-header') || region;
+  const scrollTarget = region.querySelector('.locations-region-header') || block || region;
 
   selectLocationsRegion(regionId, stateCode);
   scrollToElement(scrollTarget, behavior);
@@ -753,6 +765,16 @@ document.querySelectorAll('.locations-jump a[href^="#region-"]').forEach(link =>
   link.addEventListener('focus', () => previewLocationsHighlight(regionId));
   link.addEventListener('blur', restoreLocationsHighlight);
 });
+
+function syncLocationsJumpHeight() {
+  const page = document.querySelector('.locations-page');
+  const jump = page?.querySelector('.locations-jump');
+  if (!page || !jump) return;
+  page.style.setProperty('--locations-jump-height', `${jump.offsetHeight}px`);
+}
+
+syncLocationsJumpHeight();
+window.addEventListener('resize', syncLocationsJumpHeight);
 
 /* ---- Cost estimation calculator ---- */
 function initEstimationCalculator() {
