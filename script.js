@@ -421,11 +421,28 @@ const counterObserver = new IntersectionObserver(entries => {
 document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
 
 /* ---- Smooth anchor offset for fixed nav ---- */
+function getNavScrollOffset(gap = 16) {
+  if (navbar) return navbar.offsetHeight + gap;
+  const cssNav = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height'), 10);
+  return (Number.isFinite(cssNav) ? cssNav : 80) + gap;
+}
+
+function scrollToElement(element, behavior = 'smooth') {
+  if (!element) return;
+  const top = element.getBoundingClientRect().top + window.scrollY - getNavScrollOffset();
+  window.scrollTo({ top: Math.max(0, top), behavior });
+}
+
 function scrollToAnchorTarget(selector, behavior = 'smooth') {
+  const regionMatch = selector.match(/^#region-(northeast|south|midwest|west)$/);
+  if (regionMatch) {
+    scrollToRegion(regionMatch[1], behavior);
+    return;
+  }
   const target = document.querySelector(selector);
   if (!target) return;
-  const offset = navbar ? navbar.offsetHeight + 20 : 80;
-  window.scrollTo({ top: target.offsetTop - offset, behavior });
+  const scrollTarget = target.querySelector('.locations-region-header') || target;
+  scrollToElement(scrollTarget, behavior);
 }
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -447,11 +464,9 @@ function scrollToBookingRegionHead(regionId, behavior = 'smooth') {
       ? bookingPage.querySelector('#booking-cities-list .booking-region-head')
       : bookingPage.querySelector(`#region-${regionId} .booking-region-head`);
   if (!head) return;
-  const offset = navbar ? navbar.offsetHeight + 20 : 80;
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      const top = head.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top, behavior });
+      scrollToElement(head, behavior);
     });
   });
 }
@@ -619,11 +634,11 @@ function clearActiveMapRegion() {
   setActiveMapRegion('');
 }
 
-function scrollToRegion(regionId) {
+function scrollToRegion(regionId, behavior = 'smooth') {
   const target = regionPanel(regionId);
   if (!target) return;
-  const offset = navbar ? navbar.offsetHeight + 20 : 80;
-  window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+  const head = target.querySelector('.locations-region-header') || target;
+  scrollToElement(head, behavior);
   setActiveMapRegion(regionId);
   target.classList.add('locations-region-focus');
   window.setTimeout(() => {
