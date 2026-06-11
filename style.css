@@ -1289,6 +1289,27 @@ a.btn { cursor: pointer; position: relative; z-index: 1; }
   border-radius: var(--radius);
   transition: background 0.3s, border-color 0.3s, transform 0.3s, box-shadow 0.3s;
   box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  scroll-margin-top: calc(var(--nav-height) + 0.75rem);
+}
+.locations-region-northeast .locations-state-block.is-active,
+.locations-region-northeast .locations-state-block.locations-state-focus {
+  border-color: rgba(220, 38, 38, 0.45);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12), 0 12px 32px rgba(220, 38, 38, 0.1);
+}
+.locations-region-south .locations-state-block.is-active,
+.locations-region-south .locations-state-block.locations-state-focus {
+  border-color: rgba(234, 88, 12, 0.45);
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.12), 0 12px 32px rgba(234, 88, 12, 0.1);
+}
+.locations-region-midwest .locations-state-block.is-active,
+.locations-region-midwest .locations-state-block.locations-state-focus {
+  border-color: rgba(37, 99, 235, 0.45);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12), 0 12px 32px rgba(37, 99, 235, 0.1);
+}
+.locations-region-west .locations-state-block.is-active,
+.locations-region-west .locations-state-block.locations-state-focus {
+  border-color: rgba(124, 58, 237, 0.45);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12), 0 12px 32px rgba(124, 58, 237, 0.1);
 }
 .locations-state-block:hover {
   background: var(--white);

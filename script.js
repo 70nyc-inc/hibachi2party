@@ -618,15 +618,48 @@ if (location.hash) {
 
 /* ---- Locations map: click/hover state to jump & highlight region ---- */
 const LOCATIONS_REGION_IDS = ['northeast', 'south', 'midwest', 'west'];
+const STATE_BLOCK_IDS = {
+  AZ: 'state-arizona',
+  CA: 'state-california',
+  CT: 'state-connecticut',
+  DE: 'state-delaware',
+  DC: 'state-washington-dc',
+  FL: 'state-florida',
+  GA: 'state-georgia',
+  IL: 'state-illinois',
+  IN: 'state-indiana',
+  MD: 'state-maryland',
+  MA: 'state-massachusetts',
+  MI: 'state-michigan',
+  MS: 'state-mississippi',
+  NJ: 'state-new-jersey',
+  NY: 'state-new-york',
+  NC: 'state-north-carolina',
+  OK: 'state-oklahoma',
+  PA: 'state-pennsylvania',
+  RI: 'state-rhode-island',
+  SC: 'state-south-carolina',
+  TN: 'state-tennessee',
+  TX: 'state-texas',
+  VA: 'state-virginia',
+};
 let selectedLocationsRegion = '';
+let selectedLocationsState = '';
 
 function regionPanel(regionId) {
   return document.getElementById(`region-${regionId}`);
 }
 
-function paintLocationsRegionHighlight(regionId) {
+function stateBlock(stateCode) {
+  const id = STATE_BLOCK_IDS[stateCode];
+  return id ? document.getElementById(id) : null;
+}
+
+function paintLocationsHighlight(regionId, stateCode = '') {
   document.querySelectorAll('.locations-us-map path.served[data-region]').forEach(path => {
-    path.classList.toggle('map-region-active', path.dataset.region === regionId);
+    const inRegion = path.dataset.region === regionId;
+    const match = stateCode ? path.dataset.state === stateCode : inRegion;
+    path.classList.toggle('map-region-active', Boolean(regionId && match));
   });
   document.querySelectorAll('.locations-region[data-region]').forEach(panel => {
     panel.classList.toggle('locations-region-hover', panel.dataset.region === regionId);
@@ -638,20 +671,45 @@ function paintLocationsRegionHighlight(regionId) {
     if (active) link.setAttribute('aria-current', 'true');
     else link.removeAttribute('aria-current');
   });
+  document.querySelectorAll('.locations-state-block[id^="state-"]').forEach(block => {
+    const active = Boolean(stateCode && block.id === STATE_BLOCK_IDS[stateCode]);
+    block.classList.toggle('is-active', active);
+    if (active) block.setAttribute('aria-current', 'true');
+    else block.removeAttribute('aria-current');
+  });
 }
 
-function previewLocationsRegion(regionId) {
-  paintLocationsRegionHighlight(regionId);
+function previewLocationsHighlight(regionId, stateCode = '') {
+  paintLocationsHighlight(regionId, stateCode);
 }
 
-function restoreLocationsRegionHighlight() {
-  paintLocationsRegionHighlight(selectedLocationsRegion);
+function restoreLocationsHighlight() {
+  paintLocationsHighlight(selectedLocationsRegion, selectedLocationsState);
 }
 
-function selectLocationsRegion(regionId) {
+function selectLocationsRegion(regionId, stateCode = '') {
   if (!LOCATIONS_REGION_IDS.includes(regionId)) return;
   selectedLocationsRegion = regionId;
-  paintLocationsRegionHighlight(regionId);
+  selectedLocationsState = stateCode;
+  paintLocationsHighlight(regionId, stateCode);
+}
+
+function scrollToState(stateCode, regionId, behavior = 'smooth') {
+  if (!LOCATIONS_REGION_IDS.includes(regionId)) return;
+  const region = regionPanel(regionId);
+  if (!region) return;
+  const block = stateBlock(stateCode);
+  const scrollTarget = block || region.querySelector('.locations-region-header') || region;
+
+  selectLocationsRegion(regionId, stateCode);
+  scrollToElement(scrollTarget, behavior);
+
+  region.classList.add('locations-region-focus');
+  window.setTimeout(() => region.classList.remove('locations-region-focus'), 1600);
+  if (block) {
+    block.classList.add('locations-state-focus');
+    window.setTimeout(() => block.classList.remove('locations-state-focus'), 1600);
+  }
 }
 
 function scrollToRegion(regionId, behavior = 'smooth') {
@@ -668,12 +726,13 @@ function scrollToRegion(regionId, behavior = 'smooth') {
 
 document.querySelectorAll('.locations-us-map path.served[data-region]').forEach(path => {
   const regionId = path.dataset.region;
-  const go = () => scrollToRegion(regionId);
+  const stateCode = path.dataset.state || '';
+  const go = () => scrollToState(stateCode, regionId);
   path.addEventListener('click', go);
-  path.addEventListener('mouseenter', () => previewLocationsRegion(regionId));
-  path.addEventListener('mouseleave', restoreLocationsRegionHighlight);
-  path.addEventListener('focus', () => previewLocationsRegion(regionId));
-  path.addEventListener('blur', restoreLocationsRegionHighlight);
+  path.addEventListener('mouseenter', () => previewLocationsHighlight(regionId, stateCode));
+  path.addEventListener('mouseleave', restoreLocationsHighlight);
+  path.addEventListener('focus', () => previewLocationsHighlight(regionId, stateCode));
+  path.addEventListener('blur', restoreLocationsHighlight);
   path.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -684,16 +743,16 @@ document.querySelectorAll('.locations-us-map path.served[data-region]').forEach(
 
 document.querySelectorAll('.locations-region[data-region]').forEach(panel => {
   const regionId = panel.dataset.region;
-  panel.addEventListener('mouseenter', () => previewLocationsRegion(regionId));
-  panel.addEventListener('mouseleave', restoreLocationsRegionHighlight);
+  panel.addEventListener('mouseenter', () => previewLocationsHighlight(regionId));
+  panel.addEventListener('mouseleave', restoreLocationsHighlight);
 });
 
 document.querySelectorAll('.locations-jump a[href^="#region-"]').forEach(link => {
   const regionId = link.getAttribute('href').replace('#region-', '');
-  link.addEventListener('mouseenter', () => previewLocationsRegion(regionId));
-  link.addEventListener('mouseleave', restoreLocationsRegionHighlight);
-  link.addEventListener('focus', () => previewLocationsRegion(regionId));
-  link.addEventListener('blur', restoreLocationsRegionHighlight);
+  link.addEventListener('mouseenter', () => previewLocationsHighlight(regionId));
+  link.addEventListener('mouseleave', restoreLocationsHighlight);
+  link.addEventListener('focus', () => previewLocationsHighlight(regionId));
+  link.addEventListener('blur', restoreLocationsHighlight);
 });
 
 /* ---- Cost estimation calculator ---- */
