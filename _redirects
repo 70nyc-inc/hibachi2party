@@ -135,6 +135,8 @@
 /booking/washington-dc/index.html    /booking/washington-dc/    301
 
 # WordPress legacy paths (301).
+/about-us    /    301
+/about-us/    /    301
 /wp-content/*    /    301
 /wp-admin/*    /    301
 /wp-includes/*    /    301
