@@ -1,0 +1,573 @@
+#!/usr/bin/env python3
+"""Generate NJ county hibachi catering landing pages."""
+
+import json
+import os
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ACUITY = "61067038"
+IMG = "/media/cities/best-new-jersey-home-hibachi-chef.jpg"
+
+COUNTIES = [
+    {
+        "slug": "bergen-county-hibachi-catering",
+        "name": "Bergen County",
+        "short": "Bergen",
+        "region": "North Jersey",
+        "towns": "Fort Lee, Paramus, Hackensack, Ridgewood, Teaneck, Englewood, Fair Lawn, Mahwah and Wyckoff",
+        "town_list": ["Fort Lee", "Paramus", "Hackensack", "Ridgewood", "Teaneck", "Englewood", "Fair Lawn", "Mahwah", "Wyckoff"],
+        "nearby": ["essex-county-hibachi-catering", "morris-county-hibachi-catering", "union-county-hibachi-catering", "middlesex-county-hibachi-catering"],
+        "scene": "suburban backyards, deck parties and family celebrations across the Palisades and Bergen County suburbs",
+        "events": "birthday parties, graduation cookouts, backyard reunions and corporate team dinners",
+    },
+    {
+        "slug": "middlesex-county-hibachi-catering",
+        "name": "Middlesex County",
+        "short": "Middlesex",
+        "region": "Central New Jersey",
+        "towns": "Edison, Woodbridge, New Brunswick, East Brunswick, Piscataway, Perth Amboy, Metuchen and South Plainfield",
+        "town_list": ["Edison", "Woodbridge", "New Brunswick", "East Brunswick", "Piscataway", "Perth Amboy", "Metuchen", "South Plainfield"],
+        "nearby": ["monmouth-county-hibachi-catering", "somerset-county-hibachi-catering", "union-county-hibachi-catering", "mercer-county-hibachi-catering"],
+        "scene": "driveways, patios and private homes from the Raritan Valley to the Route 1 corridor",
+        "events": "family dinners, birthday parties, Diwali celebrations, graduation parties and small corporate events",
+    },
+    {
+        "slug": "monmouth-county-hibachi-catering",
+        "name": "Monmouth County",
+        "short": "Monmouth",
+        "region": "Jersey Shore",
+        "towns": "Red Bank, Freehold, Middletown, Long Branch, Holmdel, Manalapan, Asbury Park and Colts Neck",
+        "town_list": ["Red Bank", "Freehold", "Middletown", "Long Branch", "Holmdel", "Manalapan", "Asbury Park", "Colts Neck"],
+        "nearby": ["middlesex-county-hibachi-catering", "ocean-county-hibachi-catering", "mercer-county-hibachi-catering", "somerset-county-hibachi-catering"],
+        "scene": "backyard parties, shore-house gatherings and upscale home entertaining along the Monmouth County coast",
+        "events": "summer backyard parties, shore-house dinners, birthday celebrations and rehearsal dinners",
+    },
+    {
+        "slug": "ocean-county-hibachi-catering",
+        "name": "Ocean County",
+        "short": "Ocean",
+        "region": "Jersey Shore",
+        "towns": "Toms River, Brick, Lakewood, Point Pleasant, Jackson, Barnegat, Berkeley Township and Stafford",
+        "town_list": ["Toms River", "Brick", "Lakewood", "Point Pleasant", "Jackson", "Barnegat", "Berkeley Township", "Stafford"],
+        "nearby": ["monmouth-county-hibachi-catering", "mercer-county-hibachi-catering", "middlesex-county-hibachi-catering", "bergen-county-hibachi-catering"],
+        "scene": "vacation rentals, backyard decks and family parties across the Barnegat Bay area",
+        "events": "shore-weekend parties, family reunions, birthday cookouts and holiday gatherings",
+    },
+    {
+        "slug": "morris-county-hibachi-catering",
+        "name": "Morris County",
+        "short": "Morris",
+        "region": "Northwest New Jersey",
+        "towns": "Morristown, Parsippany, Randolph, Madison, Denville, Florham Park, Chatham and Morris Plains",
+        "town_list": ["Morristown", "Parsippany", "Randolph", "Madison", "Denville", "Florham Park", "Chatham", "Morris Plains"],
+        "nearby": ["bergen-county-hibachi-catering", "essex-county-hibachi-catering", "somerset-county-hibachi-catering", "hunterdon-county-hibachi-catering"],
+        "scene": "spacious backyards, patio dinners and private events throughout Morris County's suburban communities",
+        "events": "milestone birthdays, corporate hospitality, graduation parties and holiday entertaining",
+    },
+    {
+        "slug": "essex-county-hibachi-catering",
+        "name": "Essex County",
+        "short": "Essex",
+        "region": "North Jersey",
+        "towns": "Newark, Montclair, West Orange, Livingston, Maplewood, Bloomfield, Millburn and South Orange",
+        "town_list": ["Newark", "Montclair", "West Orange", "Livingston", "Maplewood", "Bloomfield", "Millburn", "South Orange"],
+        "nearby": ["bergen-county-hibachi-catering", "morris-county-hibachi-catering", "union-county-hibachi-catering", "hunterdon-county-hibachi-catering"],
+        "scene": "urban backyards, townhouse patios and private home events from Newark to the Essex Fells area",
+        "events": "birthday parties, family dinners, corporate celebrations and community gatherings",
+    },
+    {
+        "slug": "union-county-hibachi-catering",
+        "name": "Union County",
+        "short": "Union",
+        "region": "North Central New Jersey",
+        "towns": "Elizabeth, Westfield, Summit, Cranford, Scotch Plains, Linden, Clark and Mountainside",
+        "town_list": ["Elizabeth", "Westfield", "Summit", "Cranford", "Scotch Plains", "Linden", "Clark", "Mountainside"],
+        "nearby": ["essex-county-hibachi-catering", "morris-county-hibachi-catering", "middlesex-county-hibachi-catering", "somerset-county-hibachi-catering"],
+        "scene": "classic suburban backyards and patio parties across Union County's tree-lined neighborhoods",
+        "events": "backyard birthdays, block-party style dinners, graduation parties and small corporate events",
+    },
+    {
+        "slug": "somerset-county-hibachi-catering",
+        "name": "Somerset County",
+        "short": "Somerset",
+        "region": "Central New Jersey",
+        "towns": "Bridgewater, Somerville, Franklin Township, Hillsborough, Bernardsville, Basking Ridge, Bound Brook and Warren",
+        "town_list": ["Bridgewater", "Somerville", "Franklin Township", "Hillsborough", "Bernardsville", "Basking Ridge", "Bound Brook", "Warren"],
+        "nearby": ["morris-county-hibachi-catering", "middlesex-county-hibachi-catering", "hunterdon-county-hibachi-catering", "mercer-county-hibachi-catering"],
+        "scene": "large backyards, estate patios and private events along the Somerset Hills and Route 287 corridor",
+        "events": "corporate dinners, backyard weddings, birthday parties and family milestone celebrations",
+    },
+    {
+        "slug": "hunterdon-county-hibachi-catering",
+        "name": "Hunterdon County",
+        "short": "Hunterdon",
+        "region": "Western New Jersey",
+        "towns": "Flemington, Clinton, Lambertville, Lebanon, Readington, Hampton, Califon and Frenchtown",
+        "town_list": ["Flemington", "Clinton", "Lambertville", "Lebanon", "Readington", "Hampton", "Califon", "Frenchtown"],
+        "nearby": ["somerset-county-hibachi-catering", "morris-county-hibachi-catering", "mercer-county-hibachi-catering", "middlesex-county-hibachi-catering"],
+        "scene": "country properties, barn-adjacent patios and scenic backyard gatherings across Hunterdon County",
+        "events": "farmhouse dinners, birthday parties, anniversary celebrations and intimate corporate retreats",
+    },
+    {
+        "slug": "mercer-county-hibachi-catering",
+        "name": "Mercer County",
+        "short": "Mercer",
+        "region": "Central New Jersey",
+        "towns": "Princeton, Trenton, Hamilton, Lawrence Township, West Windsor, Ewing, Hopewell and Pennington",
+        "town_list": ["Princeton", "Trenton", "Hamilton", "Lawrence Township", "West Windsor", "Ewing", "Hopewell", "Pennington"],
+        "nearby": ["middlesex-county-hibachi-catering", "somerset-county-hibachi-catering", "monmouth-county-hibachi-catering", "hunterdon-county-hibachi-catering"],
+        "scene": "Princeton-area backyards, Hamilton patios and private home events throughout the Route 1 corridor",
+        "events": "graduation parties, university celebrations, birthday dinners and corporate hospitality events",
+    },
+]
+
+SLUG_TO_NAME = {c["slug"]: c["name"] for c in COUNTIES}
+
+
+def nearby_links(slugs):
+    cards = []
+    for slug in slugs:
+        if slug in SLUG_TO_NAME:
+            cards.append(
+                f'      <a class="area-link-card reveal" href="/{slug}/">{SLUG_TO_NAME[slug]}</a>'
+            )
+    return "\n".join(cards)
+
+
+def article_body(c):
+    name = c["name"]
+    short = c["short"]
+    towns = c["towns"]
+    region = c["region"]
+    scene = c["scene"]
+    events = c["events"]
+    return f"""<h2>Private Hibachi Chef in {name}</h2>
+<p>Book <strong>{name} hibachi catering</strong> with Hibachi2Party and enjoy a full restaurant-style teppanyaki experience at home. Our trained private hibachi chef arrives with a mobile grill, fresh ingredients and live entertainment — perfect for {scene}.</p>
+<p>We serve homeowners and hosts across {towns}, bringing <strong>mobile hibachi catering</strong> directly to your driveway, patio, deck or private event space. Choose your proteins, set your guest count, and we handle setup, cooking and cleanup of the grilling station.</p>
+<h2>Backyard Hibachi Parties in {short} County, NJ</h2>
+<p>A <strong>backyard hibachi party in {name}</strong> turns an ordinary cookout into a memorable steakhouse experience. Guests gather around the grill while the chef performs classic hibachi tricks, onion volcanoes and tableside flames — ideal for {region} families who want dinner and entertainment without leaving home.</p>
+<p>Our base pricing is <strong>$50 per adult</strong>, <strong>$25 per child under 12</strong>, with a <strong>$500 event minimum</strong> for all bookings. Premium protein upgrades and appetizers are available on our <a href="/menu">menu &amp; pricing page</a>. *Sales tax is not included — applicable state and local tax may be added based on where your event is held.</p>
+<h2>Hibachi Birthday &amp; Celebration Catering in {name}</h2>
+<p>Planning a <strong>hibachi birthday party in {short} County</strong>? Hibachi2Party brings the show to you so hosts can relax while guests stay entertained from appetizers through the main course. We regularly cater {events} across {name}.</p>
+<p>Whether you are hosting 10 guests or a larger backyard gathering, our at-home hibachi chef service keeps the energy high and every plate cooked fresh off the grill.</p>
+<h2>Corporate &amp; Private Events in {region}</h2>
+<p>Hosts across {towns} book <strong>corporate hibachi catering</strong> for team celebrations, client dinners, company picnics and employee appreciation events. A private chef at home creates a unique atmosphere that stands out from typical drop-off catering.</p>
+<p>From intimate dinners to larger outdoor parties, Hibachi2Party delivers Japanese steakhouse flavor with the convenience of cooking at your venue. <a href="#book-now">Reserve your date online</a> or call <a href="tel:+19297597607">(929) 759-7607</a> to check availability in {name}, NJ.</p>
+<h2>Service Area in {name}</h2>
+<p>Our <strong>{name} hibachi at home</strong> service covers {towns} and surrounding communities throughout {short} County. If you are just outside these towns, contact us — we often serve nearby ZIP codes across {region} and greater <a href="/new-jersey/">New Jersey</a>.</p>
+<ul>
+{"".join(f"<li>{t}</li>" for t in c["town_list"])}
+</ul>"""
+
+
+def faq_items(c):
+    name = c["name"]
+    short = c["short"]
+    towns = c["towns"]
+    items = [
+        (
+            f"Do you travel to {name}?",
+            f"Yes. Hibachi2Party provides <strong>mobile hibachi catering throughout {name}, NJ</strong>, including {towns}. Book online or call <a href=\"tel:+19297597607\">(929) 759-7607</a> to confirm availability for your address.",
+        ),
+        (
+            f"How much does hibachi catering cost in {short} County?",
+            f"Our base rate is <strong>$50 per adult</strong> and <strong>$25 per child under 12</strong>, with a <strong>$500 minimum spend</strong> for all events in {name}. Each guest receives salad, fried rice, vegetables and two protein choices. See our <a href=\"/menu\">menu &amp; pricing page</a> for upgrades.",
+        ),
+        (
+            f"What do guests need to provide for a {short} County party?",
+            f"Please have ready: eating utensils, plates and salad bowls, beverages, tables and chairs, and a clear area for our mobile grill (approximately 68\" L × 28\" W × 41\" H). We bring the chef, grill, propane, food and entertainment.",
+        ),
+        (
+            f"How many people are required to book in {name}?",
+            f"There is no maximum guest count. Every event has a <strong>$500 minimum spend</strong> — typically about 10 adults at our base rate. Smaller groups are welcome as long as the minimum is met.",
+        ),
+        (
+            f"Can you host indoor hibachi parties in {name}?",
+            f"Yes. We regularly host indoor parties in {short} County when space allows. Indoor events require ceilings at least <strong>10 feet high</strong>, good ventilation and the cooking area near a window or door. Discuss your layout when you book.",
+        ),
+        (
+            f"What is included in {name} hibachi catering?",
+            f"Every booking includes a private hibachi chef, mobile grill setup, salad, fried rice, hibachi vegetables, two proteins per guest and a live teppanyaki show. Premium upgrades and add-ons are available on our <a href=\"/menu\">menu page</a>.",
+        ),
+        (
+            "What are the payment methods?",
+            "Hibachi2Party accepts <strong>cash only</strong> on the day of your event. There is no deposit required to book your date online.",
+        ),
+        (
+            "How far in advance should I book?",
+            "We recommend booking as early as possible — especially for weekends and summer dates in New Jersey. Popular dates in Bergen, Monmouth and Ocean counties fill quickly during peak season.",
+        ),
+    ]
+    html = []
+    for q, a in items:
+        html.append(f"""      <div class="faq-item">
+        <button type="button" class="faq-question" aria-expanded="false">
+          <span>{q}</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-answer"><p>{a}</p></div>
+      </div>""")
+    return "\n".join(html)
+
+
+def schema_json(c):
+    name = c["name"]
+    slug = c["slug"]
+    url = f"https://hibachi2partys.com/{slug}/"
+    desc = (
+        f"Book {name} hibachi catering at home with a private mobile hibachi chef. "
+        f"Backyard parties, birthdays and corporate events across {c['towns']}."
+    )
+    faq_entities = [
+        {
+            "@type": "Question",
+            "name": f"Do you travel to {name}?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f"Yes. Hibachi2Party provides mobile hibachi catering throughout {name}, NJ, including {c['towns']}.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": f"How much does hibachi catering cost in {c['short']} County?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Base rate is $50 per adult and $25 per child under 12, with a $500 minimum spend for all events.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": f"What do guests need to provide for a {c['short']} County party?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Hosts provide utensils, plates, beverages, tables, chairs and a clear area for the mobile grill. We bring the chef, grill, food and entertainment.",
+            },
+        },
+    ]
+    graph = [
+        {
+            "@type": "WebPage",
+            "@id": f"{url}#webpage",
+            "url": url,
+            "name": f"{name} Hibachi Catering | Private Hibachi Chef at Home",
+            "description": desc,
+            "isPartOf": {"@id": "https://hibachi2partys.com/#website"},
+            "about": {"@id": "https://hibachi2partys.com/#business"},
+            "breadcrumb": {"@id": f"{url}#breadcrumb"},
+        },
+        {
+            "@type": "Service",
+            "@id": f"{url}#service",
+            "name": f"{name} Hibachi Catering",
+            "serviceType": "Mobile Hibachi Catering",
+            "provider": {
+                "@type": "LocalBusiness",
+                "@id": "https://hibachi2partys.com/#business",
+                "name": "Hibachi2Party",
+                "telephone": "+1-929-759-7607",
+                "email": "hibachi2party@gmail.com",
+                "url": "https://hibachi2partys.com/",
+            },
+            "areaServed": {"@type": "AdministrativeArea", "name": name},
+            "description": desc,
+        },
+        {
+            "@type": "BreadcrumbList",
+            "@id": f"{url}#breadcrumb",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://hibachi2partys.com/"},
+                {"@type": "ListItem", "position": 2, "name": "New Jersey", "item": "https://hibachi2partys.com/new-jersey/"},
+                {"@type": "ListItem", "position": 3, "name": name, "item": url},
+            ],
+        },
+        {
+            "@type": "FAQPage",
+            "@id": f"{url}#faq",
+            "mainEntity": faq_entities,
+        },
+    ]
+    return json.dumps({"@context": "https://schema.org", "@graph": graph}, separators=(",", ":"))
+
+
+def render_page(c):
+    name = c["name"]
+    slug = c["slug"]
+    short = c["short"]
+    url = f"https://hibachi2partys.com/{slug}/"
+    title = f"{name} Hibachi Catering | Private Hibachi Chef at Home | Hibachi2Party"
+    desc = (
+        f"Book {name} hibachi catering at home. Private mobile hibachi chef for backyard parties, "
+        f"birthdays and corporate events across {c['towns']}."
+    )
+    keywords = (
+        f"{name} hibachi catering, hibachi party {short} County NJ, private hibachi chef {name}, "
+        f"mobile hibachi {name}, backyard hibachi party {short} County, Hibachi2Party"
+    )
+    faq_id = f"faq-title-{slug.replace('-', '')}"
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) - GA4 + Google Ads -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q2Q0E4FFQJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){{dataLayer.push(arguments);}}
+    gtag('js', new Date());
+    gtag('config', 'G-Q2Q0E4FFQJ');
+    gtag('config', 'AW-11499729036');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content="{desc}">
+  <meta name="keywords" content="{keywords}">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Hibachi2Party">
+  <link rel="canonical" href="{url}">
+  <link rel="icon" href="/media/2024/03/cropped-d9a8ca2e-8cac-4c7c-ae4b-549a490520ea-3.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/media/2024/03/cropped-d9a8ca2e-8cac-4c7c-ae4b-549a490520ea-3.png">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{title}">
+  <meta property="og:description" content="{desc}">
+  <meta property="og:url" content="{url}">
+  <meta property="og:image" content="https://hibachi2partys.com/media/2024/03/cropped-d9a8ca2e-8cac-4c7c-ae4b-549a490520ea-3.png">
+  <meta property="og:site_name" content="Hibachi2Party">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{title}">
+  <meta name="twitter:description" content="{desc}">
+  <meta name="twitter:image" content="https://hibachi2partys.com/media/2024/03/cropped-d9a8ca2e-8cac-4c7c-ae4b-549a490520ea-3.png">
+  <link rel="stylesheet" href="../style.css">
+  <script type="application/ld+json">
+  {schema_json(c)}
+  </script>
+</head>
+<body class="theme-light">
+
+<nav class="navbar" aria-label="Main navigation">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="Hibachi2Party Home">
+        <img src="/media/2024/03/HIBACHI2PARTY_LOGO2.png" alt="Hibachi2Party Logo - Mobile Hibachi Catering" width="230" height="92">
+      </a>
+      <ul class="nav-menu" role="list">
+        <li><a href="/service-area" class="active">Locations</a></li>
+        <li><a href="/menu">Menu</a></li>
+        <li><a href="/estimation">Estimation</a></li>
+        <li><a href="/book-online">Catering Booking</a></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/gallery">Photos & Videos</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+      <div class="social-links nav-social" aria-label="Social media">
+  <a class="social-link social-link-nav" href="https://www.instagram.com/hibachi2partyusa" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+  <a class="social-link social-link-nav" href="https://www.tiktok.com/@hibachi2party" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+  <a class="social-link social-link-nav" href="https://www.facebook.com/hibachi2party" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+</div>
+      <div class="nav-cta">
+        <a href="#book-now" class="btn btn-primary btn-sm">Book Now</a>
+      </div>
+      <button class="hamburger" aria-label="Toggle mobile menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span>›</span><a href="/new-jersey/">New Jersey</a><span>›</span><span>{name}</span></nav>
+    <div class="section-label">{name} hibachi catering</div>
+    <h1 class="page-hero-title">{name} Hibachi Catering at Home</h1>
+    <p class="page-hero-desc">Book private hibachi catering in {name}, NJ. Mobile hibachi chef for backyard parties, birthdays and corporate events across {c['towns']}.</p>
+  </div>
+</section>
+
+<section class="section section-alt booking-embed-section" id="book-now" aria-labelledby="book-now-title">
+  <div class="container booking-wrap">
+    <div class="text-center reveal" style="margin-bottom:2rem">
+      <div class="section-label">Reserve Your Date</div>
+      <h2 class="section-title" id="book-now-title">Book <span>{name}</span></h2>
+      <p class="section-desc">Select your date and complete your reservation below</p>
+    </div>
+    <div class="booking-embed reveal">
+      <iframe src="https://app.acuityscheduling.com/schedule.php?owner=31945881&appointmentType={ACUITY}" title="Book {name} hibachi catering" width="100%" height="800" frameborder="0" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+<script src="https://embed.acuityscheduling.com/js/embed.js" type="text/javascript"></script>
+
+<section class="section" aria-labelledby="county-content">
+  <div class="container">
+    <article class="city-card reveal">
+      <img src="{IMG}" alt="{name} hibachi catering at home" class="city-img" loading="lazy" width="800" height="350">
+      <div class="city-content">
+        <h2 class="city-name" id="county-content">{name} Hibachi Catering</h2>
+        <div class="article-body city-desc">{article_body(c)}</div>
+        <a href="#book-now" class="btn btn-primary" style="margin-top:1.25rem">Book {name}</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="pricing-title">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title" id="pricing-title">Menu &amp; <span>Pricing</span></h2>
+      <p class="section-desc">Transparent per-person pricing for private hibachi parties in {name}</p>
+    </div>
+    <div class="price-cards-grid reveal">
+      <div class="price-card featured">
+        <div class="price-card-header">
+          <div class="price-emoji">👨‍👩‍👧‍👦</div>
+          <h3>Adults</h3>
+          <div class="price-amount">$50</div>
+          <div class="price-per">per adult</div>
+        </div>
+        <ul class="price-includes">
+          <li>2 proteins per person</li>
+          <li>Salad, fried rice &amp; vegetables</li>
+          <li>Live hibachi chef show</li>
+          <li>Mobile grill setup</li>
+        </ul>
+      </div>
+      <div class="price-card">
+        <div class="price-card-header">
+          <div class="price-emoji">🧒</div>
+          <h3>Kids</h3>
+          <div class="price-amount">$25</div>
+          <div class="price-per">per kid under 12</div>
+        </div>
+        <ul class="price-includes">
+          <li>Same menu as adults</li>
+          <li>Kid-friendly portions</li>
+          <li>Full hibachi experience</li>
+        </ul>
+      </div>
+      <div class="price-card">
+        <div class="price-card-header">
+          <div class="price-emoji">🎉</div>
+          <h3>Event Minimum</h3>
+          <div class="price-amount">$500</div>
+          <div class="price-per">minimum for all events</div>
+        </div>
+        <ul class="price-includes">
+          <li>Applies to every booking</li>
+          <li>Private backyard &amp; home parties</li>
+          <li>Corporate &amp; celebration events</li>
+          <li>Upgrade proteins &amp; add-ons available</li>
+        </ul>
+      </div>
+    </div>
+    <p class="pricing-disclaimer reveal">*Sales tax is not included — applicable state and local tax may be added based on where your event is held. Gratuity not included.</p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="{faq_id}">
+  <div class="container">
+    <div class="text-center reveal" style="margin-bottom:2.5rem">
+      <div class="section-label">Got Questions?</div>
+      <h2 class="section-title" id="{faq_id}">{name} Hibachi <span>FAQ</span></h2>
+    </div>
+    <div class="faq-list reveal">
+{faq_items(c)}
+    </div>
+    <div class="text-center reveal" style="margin-top:2rem">
+      <a href="/faq" class="btn btn-outline">View All FAQs</a>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="nearby-title">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-label">Nearby Areas</div>
+      <h2 class="section-title" id="nearby-title">More <span>New Jersey Counties</span></h2>
+      <p class="section-desc">Explore hibachi catering in nearby NJ counties or return to our <a href="/new-jersey/">New Jersey hub page</a>.</p>
+    </div>
+    <div class="area-links-grid reveal">
+{nearby_links(c["nearby"])}
+      <a class="area-link-card reveal" href="/new-jersey/">All New Jersey</a>
+    </div>
+  </div>
+</section>
+
+<section class="cta-strip" aria-labelledby="cta-title">
+  <div class="container">
+    <h2 class="cta-title" id="cta-title">Book {name} Hibachi Catering</h2>
+    <p class="cta-sub">Reserve your private mobile hibachi chef in {name}, NJ today.</p>
+    <div class="cta-buttons">
+      <a href="#book-now" class="btn btn-gold btn-lg">🔥 Book Online Now</a>
+      <a href="tel:+19297597607" class="btn btn-outline btn-lg">📞 Call (929) 759-7607</a>
+    </div>
+    <p class="cta-note">$500 event minimum · Sales tax is not included — applicable state and local tax may be added based on where your event is held. · Gratuity not included</p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" aria-label="Hibachi2Party Home">
+          <img src="/media/2024/03/HIBACHI2PARTY_LOGO2.png" alt="Hibachi2Party - Mobile Hibachi Catering" width="120" height="48">
+        </a>
+        <p>Mobile hibachi catering and private chef service for at-home and backyard parties across {name}, <a href="/new-jersey/">New Jersey</a> and the greater Northeast.</p>
+      </div>
+      <div class="footer-col">
+        <h4>NJ Counties</h4>
+        <ul>
+{"".join(f'          <li><a href="/{x["slug"]}/">{x["name"]}</a></li>\n' for x in COUNTIES)}
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/service-area">Locations</a></li>
+          <li><a href="/menu">Menu</a></li>
+          <li><a href="/estimation">Cost Estimation</a></li>
+          <li><a href="/book-online">Catering Booking</a></li>
+          <li><a href="/faq">FAQ</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <div class="footer-contact-item">
+          <span>📞</span><a href="tel:+19297597607">(929) 759-7607</a>
+        </div>
+        <div class="footer-contact-item">
+          <span>✉️</span><a href="mailto:hibachi2party@gmail.com">hibachi2party@gmail.com</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">&copy; 2026 Hibachi2Party. All Rights Reserved.</p>
+      <p class="footer-partner">Design by <a href="https://70nyc.com" target="_blank" rel="noopener noreferrer">70nyc</a></p>
+    </div>
+  </div>
+</footer>
+<div class="floating-mobile">
+  <a href="tel:+19297597607">Call</a>
+  <a href="#book-now">Book</a>
+  <a href="sms:19297597607">Text</a>
+</div>
+
+<script src="../script.js" defer></script>
+</body>
+</html>
+"""
+
+
+def main():
+    for c in COUNTIES:
+        out_dir = os.path.join(ROOT, c["slug"])
+        os.makedirs(out_dir, exist_ok=True)
+        out_path = os.path.join(out_dir, "index.html")
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write(render_page(c))
+        print(f"Wrote {out_path}")
+
+
+if __name__ == "__main__":
+    main()
