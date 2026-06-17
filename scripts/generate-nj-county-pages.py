@@ -182,6 +182,10 @@ def faq_items(c):
             f"There is no maximum guest count. Every event has a <strong>$500 minimum spend</strong> — typically about 10 adults at our base rate. Smaller groups in {name} are welcome as long as the minimum is met.",
         ),
         (
+            f"Is there a travel fee for hibachi catering in {name}?",
+            f"Yes. A travel fee may apply for hibachi events in <strong>{name}</strong> based on your event address and driving distance. Travel fees in <strong>New Jersey vary by location</strong> — they are <strong>separate from</strong> per-person menu pricing ($50 per adult, $25 per child under 12, $500 minimum). Call <a href=\"tel:+19297597607\">(929) 759-7607</a> or use our <a href=\"/estimation\">cost estimator</a> to confirm the travel fee for your address. Sales tax and gratuity are not included.",
+        ),
+        (
             f"Can you host indoor hibachi parties in {name}?",
             f"Yes. We regularly host indoor parties in {short} County when space allows. Indoor events require ceilings at least <strong>10 feet high</strong>, good ventilation and the cooking area near a window or door. Discuss your layout when you book.",
         ),
@@ -249,6 +253,18 @@ def schema_json(c):
             "acceptedAnswer": {
                 "@type": "Answer",
                 "text": "There is no maximum guest count. Every event has a $500 minimum spend — typically about 10 adults at the base rate.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": f"Is there a travel fee for hibachi catering in {name}?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": (
+                    f"A travel fee may apply for events in {name} based on event address and driving distance. "
+                    "Travel fees in New Jersey vary by location and are separate from per-person menu pricing "
+                    "($50 per adult, $25 per child under 12, $500 minimum)."
+                ),
             },
         },
     ]
