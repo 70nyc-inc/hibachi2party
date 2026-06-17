@@ -170,16 +170,16 @@ def faq_items(c):
             f"Yes. Hibachi2Party provides <strong>mobile hibachi catering throughout {name}, NJ</strong>, including {towns}. Book online or call <a href=\"tel:+19297597607\">(929) 759-7607</a> to confirm availability for your address.",
         ),
         (
-            f"How much does hibachi catering cost in {short} County?",
-            f"Our base rate is <strong>$50 per adult</strong> and <strong>$25 per child under 12</strong>, with a <strong>$500 minimum spend</strong> for all events in {name}. Each guest receives salad, fried rice, vegetables and two protein choices. See our <a href=\"/menu\">menu &amp; pricing page</a> for upgrades.",
+            f"How much does hibachi catering in {name} cost?",
+            f"Our base rate is <strong>$50 per adult</strong> and <strong>$25 per child under 12</strong>, with a <strong>$500 minimum spend</strong> for all events in {name}. Each guest receives salad, fried rice, vegetables and two protein choices. See our <a href=\"/menu\">menu &amp; pricing page</a> for upgrades. *Sales tax is not included.",
         ),
         (
-            f"What do guests need to provide for a {short} County party?",
-            f"Please have ready: eating utensils, plates and salad bowls, beverages, tables and chairs, and a clear area for our mobile grill (approximately 68\" L × 28\" W × 41\" H). We bring the chef, grill, propane, food and entertainment.",
+            f"What do guests need to provide for a {name} hibachi party?",
+            f"Please have ready: eating utensils, plates and salad bowls, beverages, tables and chairs, and a clear area for our mobile grill (approximately 68\" L × 28\" W × 41\" H). We bring the chef, grill, propane, food and entertainment to your {name} event.",
         ),
         (
             f"How many people are required to book in {name}?",
-            f"There is no maximum guest count. Every event has a <strong>$500 minimum spend</strong> — typically about 10 adults at our base rate. Smaller groups are welcome as long as the minimum is met.",
+            f"There is no maximum guest count. Every event has a <strong>$500 minimum spend</strong> — typically about 10 adults at our base rate. Smaller groups in {name} are welcome as long as the minimum is met.",
         ),
         (
             f"Can you host indoor hibachi parties in {name}?",
@@ -229,7 +229,7 @@ def schema_json(c):
         },
         {
             "@type": "Question",
-            "name": f"How much does hibachi catering cost in {c['short']} County?",
+            "name": f"How much does hibachi catering in {name} cost?",
             "acceptedAnswer": {
                 "@type": "Answer",
                 "text": "Base rate is $50 per adult and $25 per child under 12, with a $500 minimum spend for all events.",
@@ -237,10 +237,18 @@ def schema_json(c):
         },
         {
             "@type": "Question",
-            "name": f"What do guests need to provide for a {c['short']} County party?",
+            "name": f"What do guests need to provide for a {name} hibachi party?",
             "acceptedAnswer": {
                 "@type": "Answer",
                 "text": "Hosts provide utensils, plates, beverages, tables, chairs and a clear area for the mobile grill. We bring the chef, grill, food and entertainment.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": f"How many people are required to book in {name}?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "There is no maximum guest count. Every event has a $500 minimum spend — typically about 10 adults at the base rate.",
             },
         },
     ]
