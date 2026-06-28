@@ -1113,15 +1113,72 @@ initAcuityConversionTracking();
 /* ---- Phone click → Google Ads conversion ---- */
 function initPhoneClickConversionTracking() {
   const PHONE_CLICK_SEND_TO = 'AW-11499729036/piz1CPqFx4YbEIzhv-sq';
+  const ADS_SESSION_KEY = 'ads_click_session';
+  const PHONE_CLICK_DEDUPE_MS = 20000;
+
+  function isPaidUtm(params) {
+    const source = String(params.get('utm_source') || '').toLowerCase();
+    const medium = String(params.get('utm_medium') || '').toLowerCase();
+    return source === 'google' && /(cpc|ppc|paid|paidsearch)/.test(medium);
+  }
+
+  function hasGoogleAdsClickId(params) {
+    return params.has('gclid') || params.has('wbraid') || params.has('gbraid');
+  }
+
+  function markAdsSession() {
+    const params = new URLSearchParams(window.location.search || '');
+    if (hasGoogleAdsClickId(params) || isPaidUtm(params)) {
+      sessionStorage.setItem(ADS_SESSION_KEY, '1');
+    }
+  }
+
+  function isAdsSession() {
+    return sessionStorage.getItem(ADS_SESSION_KEY) === '1';
+  }
+
+  function shouldDedupeNow() {
+    const key = 'ads_phone_click_last_ts';
+    const now = Date.now();
+    const prev = Number(sessionStorage.getItem(key) || 0);
+    if (now - prev < PHONE_CLICK_DEDUPE_MS) return true;
+    sessionStorage.setItem(key, String(now));
+    return false;
+  }
+
+  markAdsSession();
 
   document.addEventListener('click', (e) => {
     const link = e.target.closest('a[href^="tel:"]');
-    if (!link || typeof gtag !== 'function') return;
+    if (!link) return;
 
+    // Only count Google Ads phone-click conversions for paid sessions.
+    if (!isAdsSession()) return;
+    if (shouldDedupeNow()) return;
+    if (typeof gtag !== 'function') return;
+
+    const telHref = link.getAttribute('href');
+    if (!telHref) return;
+
+    e.preventDefault();
+
+    let completed = false;
+    const continueCall = () => {
+      if (completed) return;
+      completed = true;
+      window.location.href = telHref;
+    };
+
+    const fallbackTimer = window.setTimeout(continueCall, 900);
     gtag('event', 'conversion', {
       send_to: PHONE_CLICK_SEND_TO,
+      event_callback: () => {
+        window.clearTimeout(fallbackTimer);
+        continueCall();
+      },
+      event_timeout: 800,
     });
-  });
+  }, true);
 }
 
 initPhoneClickConversionTracking();
