@@ -1183,24 +1183,16 @@ function initPhoneClickConversionTracking() {
 
 initPhoneClickConversionTracking();
 
-/* ---- Acuity pages: remove mobile "Book" quick button ---- */
-function removeMobileBookButtonOnAcuityPages() {
+/* ---- Acuity pages: remove floating mobile quick actions ---- */
+function removeFloatingMobileActionsOnAcuityPages() {
   const acuityIframe = document.querySelector(
     'iframe[src*="as.me"], iframe[src*="acuityscheduling.com"]'
   );
   if (!acuityIframe) return;
 
   document.querySelectorAll('.floating-mobile').forEach((bar) => {
-    const bookLink = Array.from(bar.querySelectorAll('a')).find((a) => {
-      const href = String(a.getAttribute('href') || '').toLowerCase();
-      const label = (a.textContent || '').trim().toLowerCase();
-      return label === 'book' || href.includes('/book-online') || href.includes('#book-now');
-    });
-
-    if (bookLink) {
-      bookLink.remove();
-    }
+    bar.remove();
   });
 }
 
-removeMobileBookButtonOnAcuityPages();
+removeFloatingMobileActionsOnAcuityPages();
