@@ -2846,15 +2846,12 @@ footer {
     gap: 0.65rem;
   }
   .booking-page .booking-region-jump.locations-jump {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
     margin: 0 auto 1.25rem;
-    padding: 0 0.15rem 0.35rem;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
+    padding: 0;
+    overflow: visible;
   }
   .booking-page .booking-region-jump-item {
     flex: 0 0 auto;
@@ -2875,12 +2872,12 @@ footer {
     display: none;
   }
   .booking-page .booking-region-jump-btn {
-    width: auto;
-    min-width: 92px;
+    width: 100%;
+    min-width: 0;
     white-space: nowrap;
-    font-size: 0.74rem;
+    font-size: 0.72rem;
     letter-spacing: 0.04em;
-    padding: 0.48rem 0.78rem;
+    padding: 0.48rem 0.52rem;
   }
   .booking-regions { gap: 2.75rem; }
   .booking-card { aspect-ratio: 4 / 3; }
