@@ -56,7 +56,7 @@ def faq_block(label: str, is_state: bool) -> str:
             f"Yes. A flat <strong>$50 travel fee</strong> applies to all hibachi events in "
             f"<strong>{label}</strong> and across our Texas service area. This fee covers chef "
             f"travel to your home or venue and is <strong>in addition to</strong> per-person menu "
-            f"pricing ($50 per adult, $25 per child under 12, $500 minimum). Sales tax and "
+            f"pricing ($50 per adult, $30 per child under 12, $500 minimum). Sales tax and "
             f"gratuity are not included."
         )
     question = f"Is there a travel fee for hibachi catering in {label}?"

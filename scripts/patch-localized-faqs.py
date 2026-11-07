@@ -91,7 +91,7 @@ def localized_faq_html(label: str, travel_area: str, towns: str) -> str:
         ),
         (
             f"How much does hibachi catering in {label} cost?",
-            f"Our base rate is <strong>$50 per adult</strong> and <strong>$25 per child under 12</strong>, with a <strong>$500 minimum spend</strong> for all events in {label}. Each guest receives salad, fried rice, hibachi vegetables and <strong>two protein choices</strong>. See our <a href=\"/menu\">menu &amp; pricing page</a> for upgrades. *Sales tax is not included — applicable state and local tax may be added based on where your event is held.",
+            f"Our base rate is <strong>$50 per adult</strong> and <strong>$30 per child under 12</strong>, with a <strong>$500 minimum spend</strong> for all events in {label}. Each guest receives salad, fried rice, hibachi vegetables and <strong>two protein choices</strong>. See our <a href=\"/menu\">menu &amp; pricing page</a> for upgrades. *Sales tax is not included — applicable state and local tax may be added based on where your event is held.",
         ),
         (
             f"What do guests need to provide for a {label} hibachi party?",
@@ -149,7 +149,7 @@ def patch_faq_list(html: str, localized: str) -> str:
 def patch_schema_faq(html: str, label: str, travel_area: str, towns: str) -> str:
   questions = [
       (f"Do you travel to {label}?", f"Yes. Hibachi2Party provides mobile hibachi catering throughout {travel_area}, including {towns}."),
-      (f"How much does hibachi catering in {label} cost?", "Base rate is $50 per adult and $25 per child under 12, with a $500 minimum spend for all events."),
+      (f"How much does hibachi catering in {label} cost?", "Base rate is $50 per adult and $30 per child under 12, with a $500 minimum spend for all events."),
       (f"What do guests need to provide for a {label} hibachi party?", "Hosts provide utensils, plates, beverages, tables, chairs and a clear area for the mobile grill. We bring the chef, grill, food and entertainment."),
       (f"How many people are required to book in {label}?", "There is no maximum guest count. Every event has a $500 minimum spend — typically about 10 adults at the base rate."),
   ]

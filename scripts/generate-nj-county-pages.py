@@ -146,7 +146,7 @@ def article_body(c):
 <p>We serve homeowners and hosts across {towns}, bringing <strong>mobile hibachi catering</strong> directly to your driveway, patio, deck or private event space. Choose your proteins, set your guest count, and we handle setup, cooking and cleanup of the grilling station.</p>
 <h2>Backyard Hibachi Parties in {short} County, NJ</h2>
 <p>A <strong>backyard hibachi party in {name}</strong> turns an ordinary cookout into a memorable steakhouse experience. Guests gather around the grill while the chef performs classic hibachi tricks, onion volcanoes and tableside flames — ideal for {region} families who want dinner and entertainment without leaving home.</p>
-<p>Our base pricing is <strong>$50 per adult</strong>, <strong>$25 per child under 12</strong>, with a <strong>$500 event minimum</strong> for all bookings. Premium protein upgrades and appetizers are available on our <a href="/menu">menu &amp; pricing page</a>. *Sales tax is not included — applicable state and local tax may be added based on where your event is held.</p>
+<p>Our base pricing is <strong>$50 per adult</strong>, <strong>$30 per child under 12</strong>, with a <strong>$500 event minimum</strong> for all bookings. Premium protein upgrades and appetizers are available on our <a href="/menu">menu &amp; pricing page</a>. *Sales tax is not included — applicable state and local tax may be added based on where your event is held.</p>
 <h2>Hibachi Birthday &amp; Celebration Catering in {name}</h2>
 <p>Planning a <strong>hibachi birthday party in {short} County</strong>? Hibachi2Party brings the show to you so hosts can relax while guests stay entertained from appetizers through the main course. We regularly cater {events} across {name}.</p>
 <p>Whether you are hosting 10 guests or a larger backyard gathering, our at-home hibachi chef service keeps the energy high and every plate cooked fresh off the grill.</p>
@@ -171,7 +171,7 @@ def faq_items(c):
         ),
         (
             f"How much does hibachi catering in {name} cost?",
-            f"Our base rate is <strong>$50 per adult</strong> and <strong>$25 per child under 12</strong>, with a <strong>$500 minimum spend</strong> for all events in {name}. Each guest receives salad, fried rice, vegetables and two protein choices. See our <a href=\"/menu\">menu &amp; pricing page</a> for upgrades. *Sales tax is not included.",
+            f"Our base rate is <strong>$50 per adult</strong> and <strong>$30 per child under 12</strong>, with a <strong>$500 minimum spend</strong> for all events in {name}. Each guest receives salad, fried rice, vegetables and two protein choices. See our <a href=\"/menu\">menu &amp; pricing page</a> for upgrades. *Sales tax is not included.",
         ),
         (
             f"What do guests need to provide for a {name} hibachi party?",
@@ -183,7 +183,7 @@ def faq_items(c):
         ),
         (
             f"Is there a travel fee for hibachi catering in {name}?",
-            f"Yes. A travel fee may apply for hibachi events in <strong>{name}</strong> based on your event address and driving distance. Travel fees in <strong>New Jersey vary by location</strong> — they are <strong>separate from</strong> per-person menu pricing ($50 per adult, $25 per child under 12, $500 minimum). Call <a href=\"tel:+19297597607\">(929) 759-7607</a> or use our <a href=\"/estimation\">cost estimator</a> to confirm the travel fee for your address. Sales tax and gratuity are not included.",
+            f"Yes. A travel fee may apply for hibachi events in <strong>{name}</strong> based on your event address and driving distance. Travel fees in <strong>New Jersey vary by location</strong> — they are <strong>separate from</strong> per-person menu pricing ($50 per adult, $30 per child under 12, $500 minimum). Call <a href=\"tel:+19297597607\">(929) 759-7607</a> or use our <a href=\"/estimation\">cost estimator</a> to confirm the travel fee for your address. Sales tax and gratuity are not included.",
         ),
         (
             f"Can you host indoor hibachi parties in {name}?",
@@ -236,7 +236,7 @@ def schema_json(c):
             "name": f"How much does hibachi catering in {name} cost?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Base rate is $50 per adult and $25 per child under 12, with a $500 minimum spend for all events.",
+                "text": "Base rate is $50 per adult and $30 per child under 12, with a $500 minimum spend for all events.",
             },
         },
         {
@@ -263,7 +263,7 @@ def schema_json(c):
                 "text": (
                     f"A travel fee may apply for events in {name} based on event address and driving distance. "
                     "Travel fees in New Jersey vary by location and are separate from per-person menu pricing "
-                    "($50 per adult, $25 per child under 12, $500 minimum)."
+                    "($50 per adult, $30 per child under 12, $500 minimum)."
                 ),
             },
         },

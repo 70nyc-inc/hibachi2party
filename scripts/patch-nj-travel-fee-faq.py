@@ -50,7 +50,7 @@ def answer_html(label: str, is_state: bool) -> str:
             f"Yes. A travel fee may apply for hibachi events in <strong>{label}</strong> based on your "
             f"town, county and driving distance. Travel fees throughout <strong>New Jersey vary by "
             f"location</strong> — they are <strong>separate from</strong> per-person menu pricing "
-            f"($50 per adult, $25 per child under 12, $500 minimum). "
+            f"($50 per adult, $30 per child under 12, $500 minimum). "
             f"Call <a href=\"tel:+19297597607\">(929) 759-7607</a> or use our "
             f"<a href=\"/estimation\">cost estimator</a> to confirm the travel fee for your address. "
             f"Sales tax and gratuity are not included."
@@ -70,13 +70,13 @@ def answer_schema(label: str, is_state: bool) -> str:
         return (
             f"A travel fee may apply for events across {label} based on town, county "
             f"and driving distance. Travel fees in New Jersey vary by location and are "
-            f"separate from per-person menu pricing ($50 per adult, $25 per child under 12, "
+            f"separate from per-person menu pricing ($50 per adult, $30 per child under 12, "
             f"$500 minimum)."
         )
     return (
         f"A travel fee may apply for events in {label} based on event address and driving "
         f"distance. Travel fees in New Jersey vary by location and are separate from "
-        f"per-person menu pricing ($50 per adult, $25 per child under 12, $500 minimum)."
+        f"per-person menu pricing ($50 per adult, $30 per child under 12, $500 minimum)."
     )
 
 

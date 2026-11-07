@@ -800,7 +800,7 @@ function initEstimationCalculator() {
 
   const RATES = {
     adult: 50,
-    kid: 25,
+    kid: 30,
     minFood: 500,
     scallop: 5,
     filet: 5,
