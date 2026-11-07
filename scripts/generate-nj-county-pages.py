@@ -195,7 +195,7 @@ def faq_items(c):
         ),
         (
             "What are the payment methods?",
-            "Hibachi2Party accepts <strong>cash only</strong> on the day of your event. There is no deposit required to book your date online.",
+            "Hibachi2Party accepts <strong>cash only</strong> on the day of your event. A deposit may be required.",
         ),
         (
             "How far in advance should I book?",
